@@ -1,10 +1,45 @@
-# SynergySells
+# StyleMatch
 
-This is an E-Commerce Landing Page made with Next.js and TailwindCSS. The code is open-source, thus allowing the users to make their own versions and adjusting the code to their needs.
+StyleMatch is a platform designed to empower local vendors by providing an online storefront with catalog management, payment processing, and delivery options. Vendors can easily manage their inventory, showcase products, and improve credibility through a seamless, customer-friendly interface.
 
-## Contact
+## Features
 
-If you would like to have an even better store, for the right price, all is possible:
+- Product catalog management
+- Payment processing (integrating with Stripe)
+- Delivery options with estimated times
+- Inventory tracking and updates
+- Mobile-friendly UI
 
-Email: <a href="mailto:sami@samihindi.com">sami@samihindi.com</a><br />
-Website: www.samihindi.com
+## Tech Stack
+
+- React
+- Tailwind CSS
+- Supabase (Database)
+- Cloudinary (Image storage)
+
+## Installation
+
+1. Clone the repository:
+
+   ```
+   git clone https://github.com/freedompraise/Stylematch
+   ```
+
+2. Install dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Start the development server:
+   ```
+   npm run dev
+   ```
+
+## Contributing
+
+Feel free to contribute by opening issues or submitting pull requests. Make sure to follow the code of conduct.
+
+---
+
+Let me know if you need any changes!
