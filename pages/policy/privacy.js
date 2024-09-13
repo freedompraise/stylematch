@@ -7,17 +7,23 @@ const Policy = () => {
         <h1 className="mb-4 text-center text-2xl font-bold text-gray-800 sm:text-3xl md:mb-6">
           Privacy Policy for StyleMatch
         </h1>
-        <p className="text-gray-500 text-center">
-          At StyleMatch, accessible from https://stylematch.vercel.app, one of
-          our main priorities is the privacy of our visitors. This Privacy
-          Policy document contains types of information that is collected and
-          recorded by StyleMatch and how we use it.
+        <p className="text-gray-500 mb-4">
+          At StyleMatch, accessible from{" "}
+          <a
+            href="https://stylematch.vercel.app"
+            className="hover:text-indigo-600"
+          >
+            https://stylematch.vercel.app
+          </a>
+          , one of our main priorities is the privacy of our visitors. This
+          Privacy Policy document contains types of information that is
+          collected and recorded by StyleMatch and how we use it.
         </p>
-        <p className="text-gray-500 text-center">
+        <p className="text-gray-500 mb-4">
           If you have additional questions or require more information about our
           Privacy Policy, do not hesitate to contact us.
         </p>
-        <p className="text-gray-500 text-center">
+        <p className="text-gray-500 mb-4">
           This Privacy Policy applies only to our online activities and is valid
           for visitors to our website with regards to the information that they
           shared and/or collect in StyleMatch. This policy is not applicable to
