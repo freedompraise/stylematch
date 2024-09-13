@@ -50,7 +50,6 @@ const LandingPage = () => {
 
       <Pricing />
 
-      {/* Final CTA */}
       <section className="bg-white py-12">
         <div className="text-center">
           <h2 className="text-3xl font-bold">Join StyleMatch Today</h2>

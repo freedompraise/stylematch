@@ -1,10 +1,9 @@
-import '../styles/globals.css'
-import 'tailwindcss/tailwind.css'
-import Head from 'next/head'
-import Navbar from '../components/Navbar'
-import ScrollNavbar from '../components/ScrollNavbar';
-import Footer from '../components/Footer';
-import { ActiveTabContextProvider } from '../context/ActiveTab'
+import "../styles/globals.css";
+import "tailwindcss/tailwind.css";
+import Head from "next/head";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { ActiveTabContextProvider } from "../context/ActiveTab";
 
 function App({ Component, pageProps }) {
   return (
@@ -16,15 +15,10 @@ function App({ Component, pageProps }) {
         <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
           {
             // Navbar
-            (
-              <Navbar />
-            )
+            <Navbar />
           }
           <Component {...pageProps} />
-          {
-            // This Bottom Navbar only shows when the User has scrolled down the page and the initial Navbar isn't visible anymore
-            <ScrollNavbar />
-          }
+
           {
             // Footer
             <Footer />
@@ -32,7 +26,7 @@ function App({ Component, pageProps }) {
         </div>
       </div>
     </ActiveTabContextProvider>
-  )
+  );
 }
 
-export default App
+export default App;
