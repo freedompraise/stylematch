@@ -55,7 +55,7 @@ const LandingPage = () => {
           <h2 className="text-3xl font-bold">Join StyleMatch Today</h2>
           <p className="text-gray-600">Take your business to the next level.</p>
           <a
-            href="/signup"
+            href="/auth"
             className="mt-4 inline-block rounded-lg bg-indigo-500 px-6 py-3 text-white hover:bg-indigo-600"
           >
             Sign Up Now

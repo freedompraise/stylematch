@@ -22,7 +22,7 @@ const Navbar = () => {
               Testimonials
             </span>
           </Link>
-          <Link href="/signup">
+          <Link href="/auth">
             <button className="px-4 py-2 rounded-lg bg-indigo-500 text-white hover:bg-indigo-600">
               Sign Up
             </button>
