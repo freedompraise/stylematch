@@ -1,32 +1,52 @@
 import { supabase } from "./supabaseClient";
+import { toast } from "sonner";
 
-// Vendor Signup
-export const signUpVendor = async (email, password, companyName) => {
-  const { user, error } = await supabase.auth.signUp({
+export const signUpVendor = async (name, email, company_name, password) => {
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        name,
+        company_name,
+      },
+    },
   });
 
-  if (!error) {
-    const { data, insertError } = await supabase
-      .from("vendors")
-      .insert([{ user_id: user.id, company_name: companyName }]);
+  const user = data?.user;
 
-    if (insertError) {
-      console.log(insertError.message);
-      return { error: insertError.message };
-    }
+  if (error) {
+    console.error("Error signing up:", error.message);
+    return { data: null, error };
   }
 
-  return { user, error };
+  const { error: insertError } = await supabase.from("vendors").insert([
+    {
+      name,
+      email,
+      company_name: company_name,
+      user_id: user.id,
+    },
+  ]);
+
+  if (insertError) {
+    console.error("Error inserting vendor:", insertError.message);
+    return { data: null, error: insertError };
+  }
+
+  return { data, error: null };
 };
 
-// Vendor Login
 export const loginVendor = async (email, password) => {
-  const { user, error } = await supabase.auth.signIn({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  return { user, error };
+  if (error) {
+    console.error("Error logging in:", error.message);
+    return { data: null, error };
+  }
+
+  return { data, error: null };
 };

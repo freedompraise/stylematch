@@ -1,22 +1,54 @@
 import { useState } from "react";
-import { signUpVendor, loginVendor } from "../utils/supabaseAuth";
+import { signUpVendor, loginVendor } from "../../utils/supabaseAuth";
+import { toast } from "sonner";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
 
   const togglePane = () => setIsLogin(!isLogin);
 
   const handleSignUp = async () => {
-    const { error } = await signUpVendor(email, password, companyName);
-    if (error) console.error("Signup error: ", error);
+    const { data, error } = await signUpVendor(
+      name,
+      email,
+      password,
+      companyName
+    );
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    if (data) {
+      toast.success("Signup successful! Please confirm your email.");
+      window.location.href = "/auth/confirm-email";
+    }
   };
 
   const handleLogin = async () => {
-    const { error } = await loginVendor(email, password);
-    if (error) console.error("Login error: ", error);
+    const { data, error } = await loginVendor(email, password);
+    if (error) {
+      toast.error("Login error: " + error.message);
+      return;
+    }
+
+    if (data.user) {
+      const { data: vendorData, error: vendorError } = await supabase
+        .from("vendors")
+        .select("company_name")
+        .eq("user_id", data.user.id);
+
+      if (vendorError) {
+        toast.error("Error fetching vendor data: " + vendorError.message);
+      } else {
+        window.location.href = `/${vendorData[0].company_name}`;
+      }
+    }
   };
 
   return (
@@ -46,13 +78,23 @@ const AuthPage = () => {
         />
 
         {!isLogin && (
-          <input
-            type="text"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Company Name"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
+          <>
+            <input
+              type="text"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+
+            <input
+              type="text"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Company Name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+          </>
         )}
 
         <button
