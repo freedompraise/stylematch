@@ -33,8 +33,6 @@ const LandingPage = () => {
             >
               Get Started for Free
             </Link>
-              Get started for Free
-            </Link>
             <a
               href="#tour"
               className="inline-block rounded-lg bg-gray-200 px-8 py-3 text-center text-sm font-semibold text-gray-500 hover:bg-gray-300"
