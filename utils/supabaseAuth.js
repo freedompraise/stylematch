@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 import { toast } from "sonner";
+import Router from "next/router";
 
 export const signUpVendor = async (name, email, company_name, password) => {
   if (!name || !email || !company_name || !password) {
@@ -24,8 +25,6 @@ export const signUpVendor = async (name, email, company_name, password) => {
   }
 
   const user = data?.user;
-  console.log("User created:", user);
-
   const { error: insertError } = await supabase.from("vendors").insert([
     {
       name,
@@ -60,20 +59,40 @@ export const loginVendor = async (email, password) => {
     return { data: null, error };
   }
 
-  const user = data.user;
+  if (data.user) {
+    const { data: vendorData, error: vendorError } = await supabase
+      .from("vendors")
+      .select("company_name")
+      .eq("user_id", data.user.id)
+      .single();
 
-  const { data: vendorData, error: vendorError } = await supabase
-    .from("vendors")
-    .select("company_name")
-    .eq("user_id", user.id);
+    if (vendorError || !vendorData) {
+      toast.error("Error fetching vendor data: " + vendorError.message);
+      return { data: null, error: vendorError };
+    }
 
-  if (vendorError) {
-    toast.error("Error fetching vendor data: " + vendorError.message);
-  } else {
-    localStorage.setItem("company_name", vendorData[0].company_name);
-    localStorage.setItem("user_id", user.id);
-    window.location.href = `/${vendorData[0].company_name}`;
+    toast.success("Login successful!");
+    Router.push(`/${vendorData.company_name}`);
+    return { user: data.user, vendor: vendorData };
   }
 
   return { data, error: null };
+};
+
+export const fetchVendorData = async (company_name) => {
+  const { data: vendorData, error } = await supabase
+    .from("vendors")
+    .select("*")
+    .eq("company_name", company_name)
+    .single();
+
+  if (error || !vendorData) {
+    return { vendor: null, error };
+  }
+  return { vendor: vendorData, error: null };
+};
+
+export const getSession = async () => {
+  const { data } = await supabase.auth.getSession();
+  return data;
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../utils/supabaseClient";
 import { useRouter } from "next/router";
+import { fetchVendorData, getSession } from "../../utils/supabaseAuth";
 
 const VendorPage = () => {
   const [vendor, setVendor] = useState(null);
@@ -8,33 +8,28 @@ const VendorPage = () => {
   const { company_name } = router.query;
 
   useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
+    const checkSessionAndFetchData = async () => {
+      const session = await getSession();
+
+      if (!session?.session) {
         router.push("/auth");
         return;
       }
 
-      const fetchVendorData = async () => {
-        const { data: vendorData } = await supabase
-          .from("vendors")
-          .select("name, company_name")
-          .eq("company_name", company_name)
-          .single();
+      const { user } = session.session;
 
-        if (vendorData) {
-          setVendor(vendorData);
-        } else {
-          router.push("/auth");
-        }
-      };
+      const { vendor: vendorData, error } = await fetchVendorData(company_name);
 
-      fetchVendorData();
+      if (error || vendorData.user_id !== user.id) {
+        router.push("/auth");
+      } else {
+        setVendor(vendorData);
+      }
     };
 
-    checkSession();
+    if (company_name) {
+      checkSessionAndFetchData();
+    }
   }, [company_name]);
 
   if (!vendor) return <div>Loading...</div>;

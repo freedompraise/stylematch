@@ -1,41 +1,40 @@
 import { useEffect } from "react";
-import { supabase } from "../../utils/supabaseClient";
 import { useRouter } from "next/router";
-import { toast } from "sonner";
+import { supabase } from "../../utils/supabaseClient";
 
 const ConfirmEmailPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (session) {
-        const { data: vendorData, error: vendorError } = await supabase
+    const checkConfirmation = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+
+      if (sessionData?.session) {
+        const { user } = sessionData.session;
+
+        const { data: vendorData, error } = await supabase
           .from("vendors")
           .select("company_name")
-          .eq("user_id", session.user.id)
+          .eq("user_id", user.id)
           .single();
 
-        if (vendorError) {
-          toast.error("Error fetching vendor data: " + vendorError.message);
-          router.push("/auth");
-        } else {
-          toast.success("Email confirmed successfully!");
+        if (!error && vendorData) {
           router.push(`/${vendorData.company_name}`);
         }
-      } else {
-        toast.error("Session not found, please login.");
-        router.push("/auth");
       }
     };
 
-    checkSession();
+    checkConfirmation();
   }, []);
 
-  return <div>Confirming your email...</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded-md shadow-md text-center">
+        <h1 className="text-2xl font-bold">Email Confirmed!</h1>
+        <p className="mt-4 text-gray-600">Redirecting to your vendor page...</p>
+      </div>
+    </div>
+  );
 };
 
 export default ConfirmEmailPage;
