@@ -31,7 +31,7 @@ const LandingPage = () => {
               href="/auth"
               className="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-600"
             >
-              Get jtarted for Free
+              Get started for Free
             </Link>
             <a
               href="#tour"
