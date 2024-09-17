@@ -5,6 +5,7 @@ import HowItWorks from "../components/HowItWorks";
 import Image from "next/image";
 import { config } from "../landing.config";
 import Link from "next/link";
+import Link from "next/link";
 
 const LandingPage = () => {
   return (
@@ -32,6 +33,8 @@ const LandingPage = () => {
               className="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-600"
             >
               Get Started for Free
+            </Link>
+              Get started for Free
             </Link>
             <a
               href="#tour"
