@@ -60,7 +60,20 @@ export const loginVendor = async (email, password) => {
     return { data: null, error };
   }
 
-  console.log("Login data:", data);
-  toast.success("Login successful!");
+  const user = data.user;
+
+  const { data: vendorData, error: vendorError } = await supabase
+    .from("vendors")
+    .select("company_name")
+    .eq("user_id", user.id);
+
+  if (vendorError) {
+    toast.error("Error fetching vendor data: " + vendorError.message);
+  } else {
+    localStorage.setItem("company_name", vendorData[0].company_name);
+    localStorage.setItem("user_id", user.id);
+    window.location.href = `/${vendorData[0].company_name}`;
+  }
+
   return { data, error: null };
 };

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { signUpVendor, loginVendor } from "../../utils/supabaseAuth";
 import { toast } from "sonner";
-import { supabase } from "../../utils/supabaseClient";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,24 +12,17 @@ const AuthPage = () => {
   const togglePane = () => setIsLogin(!isLogin);
 
   const handleSignUp = async () => {
-    if (!name || !email || !password || !companyName) {
-      toast.error("All fields are required for signup.");
-      return;
-    }
-
     const { data, error } = await signUpVendor(
       name,
       email,
-      password,
-      companyName
+      companyName,
+      password
     );
 
     if (error) {
       toast.error(error.message);
       return;
     }
-
-    console.log("Signup data:", { name, email, password, companyName });
 
     if (data) {
       toast.success("Signup successful! Please confirm your email.");
@@ -39,39 +31,15 @@ const AuthPage = () => {
   };
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      toast.error("Please provide both email and password.");
-      return;
-    }
-
     const { data, error } = await loginVendor(email, password);
     if (error) {
       toast.error("Login error: " + error.message);
       return;
     }
-
-    console.log("Login data:", { email, password });
-
-    if (data.user) {
-      const { data: vendorData, error: vendorError } = await supabase
-        .from("vendors")
-        .select("company_name")
-        .eq("user_id", data.user.id);
-
-      if (vendorError) {
-        toast.error("Error fetching vendor data: " + vendorError.message);
-      } else {
-        toast.success("Login successful!");
-        window.location.href = `/${vendorData[0].company_name}`;
-      }
-    }
   };
 
   return (
-    <div
-      className="relative flex justify-center items-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url('/placeholder-image.jpg')` }}
-    >
+    <div className="relative flex justify-center items-center min-h-screen bg-cover bg-center">
       <div className="bg-white bg-opacity-80 backdrop-blur-sm p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-semibold mb-6 text-center">
           {isLogin ? "Vendor Login" : "Vendor Signup"}
@@ -108,7 +76,11 @@ const AuthPage = () => {
               className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Company Name"
               value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                const urlSafeValue = value.replace(/[^a-zA-Z0-9-_]/g, "");
+                setCompanyName(urlSafeValue);
+              }}
             />
           </>
         )}
