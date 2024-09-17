@@ -5,7 +5,6 @@ import HowItWorks from "../components/HowItWorks";
 import Image from "next/image";
 import { config } from "../landing.config";
 import Link from "next/link";
-import Link from "next/link";
 
 const LandingPage = () => {
   return (
