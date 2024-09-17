@@ -4,6 +4,7 @@ import Testimonials from "../components/Testimonials";
 import HowItWorks from "../components/HowItWorks";
 import Image from "next/image";
 import { config } from "../landing.config";
+import Link from "next/link";
 
 const LandingPage = () => {
   return (
@@ -26,12 +27,12 @@ const LandingPage = () => {
             {config.hero.big_desc}
           </h1>
           <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:justify-center">
-            <a
-              href="/signup"
+            <Link
+              href="/auth"
               className="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-600"
             >
               Get Started for Free
-            </a>
+            </Link>
             <a
               href="#tour"
               className="inline-block rounded-lg bg-gray-200 px-8 py-3 text-center text-sm font-semibold text-gray-500 hover:bg-gray-300"
@@ -54,12 +55,12 @@ const LandingPage = () => {
         <div className="text-center">
           <h2 className="text-3xl font-bold">Join StyleMatch Today</h2>
           <p className="text-gray-600">Take your business to the next level.</p>
-          <a
+          <Link
             href="/auth"
             className="mt-4 inline-block rounded-lg bg-indigo-500 px-6 py-3 text-white hover:bg-indigo-600"
           >
             Sign Up Now
-          </a>
+          </Link>
         </div>
       </section>
     </>
