@@ -72,7 +72,7 @@ export const loginVendor = async (email, password) => {
     }
 
     toast.success("Login successful!");
-    Router.push(`/${vendorData.company_name}`);
+    Router.push(`/vendor/${vendorData.company_name}`);
     return { user: data.user, vendor: vendorData };
   }
 

@@ -19,7 +19,7 @@ const ConfirmEmailPage = () => {
           .single();
 
         if (!error && vendorData) {
-          router.push(`/${vendorData.company_name}`);
+          router.push(`/vendor/${vendorData.company_name}`);
         }
       }
     };
