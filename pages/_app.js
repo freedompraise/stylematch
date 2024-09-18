@@ -1,10 +1,15 @@
 import "../styles/globals.css";
 import "tailwindcss/tailwind.css";
 import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/LandingPage/Navbar";
+import Footer from "../components/LandingPage/Footer";
+import VendorLayout from "../layouts/VendorLayout";
+import { useRouter } from "next/router";
 
 function App({ Component, pageProps }) {
+  const router = useRouter();
+  const isVendorPage = router.pathname.startsWith("/vendor");
+
   return (
     <>
       <Head>
@@ -15,20 +20,18 @@ function App({ Component, pageProps }) {
         />
         <link rel="shortcut icon" href="/favicon.jpg" />
       </Head>
-      <div className="bg-white pb-6 sm:pb-8 lg:pb-12">
-        <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
-          {
-            // Navbar
-            <Navbar />
-          }
-          <Component {...pageProps} />
 
-          {
-            // Footer
-            <Footer />
-          }
-        </div>
-      </div>
+      {isVendorPage ? (
+        <VendorLayout>
+          <Component {...pageProps} />
+        </VendorLayout>
+      ) : (
+        <>
+          <Navbar />
+          <Component {...pageProps} />
+          <Footer />
+        </>
+      )}
     </>
   );
 }

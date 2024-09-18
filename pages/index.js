@@ -1,7 +1,7 @@
-import Features from "../components/Features";
-import Pricing from "../components/Pricing";
-import Testimonials from "../components/Testimonials";
-import HowItWorks from "../components/HowItWorks";
+import Features from "../components/LandingPage/Features";
+import Pricing from "../components/LandingPage/Pricing";
+import Testimonials from "../components/LandingPage/Testimonials";
+import HowItWorks from "../components/LandingPage/HowItWorks";
 import Image from "next/image";
 import { config } from "../landing.config";
 import Link from "next/link";
