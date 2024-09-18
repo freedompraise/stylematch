@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { fetchVendorData, getSession } from "../../utils/supabaseAuth";
+import { fetchProducts } from "../api/vendor";
 
 const VendorPage = () => {
   const [vendor, setVendor] = useState(null);
+  const [products, setProducts] = useState([]);
   const router = useRouter();
   const { company_name } = router.query;
 
@@ -24,6 +26,9 @@ const VendorPage = () => {
         router.push("/auth");
       } else {
         setVendor(vendorData);
+
+        const { products: vendorProducts } = await fetchProducts(company_name);
+        setProducts(vendorProducts);
       }
     };
 
@@ -35,12 +40,28 @@ const VendorPage = () => {
   if (!vendor) return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-md shadow-md text-center">
-        <h1 className="text-2xl font-bold">Welcome {vendor.name}!</h1>
-        <p className="mt-4 text-gray-600">
-          Your company, {vendor.company_name}, is successfully registered!
-        </p>
+    <div className="flex min-h-screen">
+      <div className="p-8">
+        {products.length > 0 ? (
+          <div>
+            <h1 className="text-2xl font-bold">Your Products</h1>
+            <ul>
+              {products.map((product) => (
+                <li key={product.id} className="p-4 border-b">
+                  {product.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Welcome {vendor.name}!</h1>
+            <p className="mt-4 text-gray-600">
+              Your company, {vendor.company_name}, is successfully registered.
+              Start adding products to sell on your platform.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

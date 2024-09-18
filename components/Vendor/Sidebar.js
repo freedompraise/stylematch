@@ -25,14 +25,6 @@ const Sidebar = () => {
         </li>
         <li>
           <Link
-            href="/settings"
-            className="block py-2 px-4 font-mono text-gray-700 hover:bg-blue-100 hover:text-blue-500 transition-colors duration-200"
-          >
-            Settings
-          </Link>
-        </li>
-        <li>
-          <Link
             href="/orders"
             className="block py-2 px-4 font-mono text-gray-700 hover:bg-blue-100 hover:text-blue-500 transition-colors duration-200"
           >
