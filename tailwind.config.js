@@ -11,8 +11,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        body: ["Bricolage", "sans-serif"],
-        heading: ["Grotesque", "sans-serif"],
+        sans: ["Helvetica", "Arial", "sans-serif"],
+        serif: ["Georgia", "serif"],
       },
     },
   },
