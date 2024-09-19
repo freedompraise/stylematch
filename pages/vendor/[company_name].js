@@ -35,7 +35,7 @@ const VendorPage = () => {
     if (company_name) {
       checkSessionAndFetchData();
     }
-  }, [company_name]);
+  }, [company_name, router]);
 
   if (!vendor) return <div>Loading...</div>;
 
