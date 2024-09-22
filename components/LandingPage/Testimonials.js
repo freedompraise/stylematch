@@ -1,3 +1,5 @@
+import { Image } from "next/image";
+
 const Testimonials = () => {
   const testimonials = [
     {
@@ -21,11 +23,15 @@ const Testimonials = () => {
             <div key={index} className="p-6 rounded-lg bg-gray-100">
               <p className="mb-4 text-gray-600">{testimonial.feedback}</p>
               <h3 className="font-bold">{testimonial.name}</h3>
-              <img
-                src={testimonial.image}
-                alt={testimonial.name}
-                className="w-12 h-12 rounded-full mx-auto mt-4"
-              />
+              <div className="mt-4">
+                <Image
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  width={100}
+                  height={100}
+                  className="rounded-full"
+                />
+              </div>
             </div>
           ))}
         </div>
