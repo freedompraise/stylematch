@@ -36,18 +36,16 @@ const Navbar = ({ vendorName }) => {
             aria-labelledby="menu-button"
           >
             <div className="py-1" role="none">
-              <Link href="#" passHref>
-                <a
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem"
-                >
-                  <FontAwesomeIcon icon={faUserCircle} className="mr-2" />
-                  Profile
-                </a>
-              </Link>
-
               <Link
-                href="#"
+                href="/profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                role="menuitem"
+              >
+                <FontAwesomeIcon icon={faUserCircle} className="mr-2" />
+                Profile
+              </Link>
+              <Link
+                href="/logout"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
               >
