@@ -20,7 +20,7 @@ export const signUpVendor = async (name, email, company_name, password) => {
   });
 
   if (error) {
-    toast.error(`Signup failed: ${error.message}`);
+    console.error("Error signing up:", error.message);
     return { data: null, error };
   }
 
@@ -55,24 +55,25 @@ export const loginVendor = async (email, password) => {
   });
 
   if (error) {
-    toast.error(`Login failed: ${error.message}`);
+    console.error("Error logging in:", error.message);
     return { data: null, error };
   }
 
   if (data.user) {
     const { data: vendorData, error: vendorError } = await supabase
       .from("vendors")
-      .select("company_name")
+      .select("*")
       .eq("user_id", data.user.id)
       .single();
 
     if (vendorError || !vendorData) {
-      toast.error("Error fetching vendor data: " + vendorError.message);
+      console.error("Error fetching vendor data:", vendorError?.message);
       return { data: null, error: vendorError };
     }
 
     toast.success("Login successful!");
     Router.push(`/vendor/${vendorData.company_name}`);
+    localStorage.setItem("vendor", JSON.stringify(vendorData));
     return { user: data.user, vendor: vendorData };
   }
 
@@ -87,6 +88,7 @@ export const fetchVendorData = async (company_name) => {
     .single();
 
   if (error || !vendorData) {
+    console.error("Error fetching vendor data:", error?.message);
     return { vendor: null, error };
   }
   return { vendor: vendorData, error: null };

@@ -1,4 +1,4 @@
-const HowItWorks = () => {
+export const HowItWorks = () => {
   const steps = [
     { step: "1", title: "Sign Up", desc: "Create your vendor profile." },
     {
@@ -32,5 +32,3 @@ const HowItWorks = () => {
     </section>
   );
 };
-
-export default HowItWorks;

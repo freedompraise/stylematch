@@ -1,4 +1,4 @@
-const Features = () => {
+export const Features = () => {
   const features = [
     {
       title: "Easy Catalog Management",
@@ -34,5 +34,3 @@ const Features = () => {
     </section>
   );
 };
-
-export default Features;

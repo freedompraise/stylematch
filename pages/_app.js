@@ -1,14 +1,14 @@
 import "../styles/globals.css";
 import "tailwindcss/tailwind.css";
 import Head from "next/head";
-import Navbar from "../components/LandingPage/Navbar";
-import Footer from "../components/LandingPage/Footer";
 import VendorLayout from "../layouts/VendorLayout";
+import LandingPageLayout from "../layouts/LandingPageLayout";
 import { useRouter } from "next/router";
 
 function App({ Component, pageProps }) {
   const router = useRouter();
   const isVendorPage = router.pathname.startsWith("/vendor");
+  const isLandingPage = router.pathname === "/";
 
   return (
     <>
@@ -25,12 +25,12 @@ function App({ Component, pageProps }) {
         <VendorLayout>
           <Component {...pageProps} />
         </VendorLayout>
-      ) : (
-        <>
-          <Navbar />
+      ) : isLandingPage ? (
+        <LandingPageLayout>
           <Component {...pageProps} />
-          <Footer />
-        </>
+        </LandingPageLayout>
+      ) : (
+        <Component {...pageProps} />
       )}
     </>
   );

@@ -9,7 +9,7 @@ const Navbar = () => {
         </Link>
 
         <nav className="space-x-4">
-          <Link href="/features">
+          <Link href="/#features">
             <span className="text-gray-600 hover:text-indigo-500">
               Features
             </span>

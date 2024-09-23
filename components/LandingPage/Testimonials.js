@@ -1,6 +1,6 @@
 import { Image } from "next/image";
 
-const Testimonials = () => {
+export const Testimonials = () => {
   const testimonials = [
     {
       name: "Vendor A",
@@ -39,5 +39,3 @@ const Testimonials = () => {
     </section>
   );
 };
-
-export default Testimonials;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Pricing = () => {
+export const Pricing = () => {
   return (
     <section className="bg-gray-100 py-12">
       <div className="container mx-auto text-center">
@@ -33,5 +33,3 @@ const Pricing = () => {
     </section>
   );
 };
-
-export default Pricing;
