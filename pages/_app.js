@@ -4,6 +4,7 @@ import Head from "next/head";
 import VendorLayout from "../layouts/VendorLayout";
 import LandingPageLayout from "../layouts/LandingPageLayout";
 import { useRouter } from "next/router";
+import { Toaster } from "sonner";
 
 function App({ Component, pageProps }) {
   const router = useRouter();
@@ -32,6 +33,7 @@ function App({ Component, pageProps }) {
       ) : (
         <Component {...pageProps} />
       )}
+      <Toaster />
     </>
   );
 }
