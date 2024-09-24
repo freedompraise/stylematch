@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient";
 import { toast } from "sonner";
 import Router from "next/router";
+import Cookies from "js-cookie";
 
 export const signUpVendor = async (name, email, company_name, password) => {
   if (!name || !email || !company_name || !password) {
@@ -71,27 +72,13 @@ export const loginVendor = async (email, password) => {
       return { data: null, error: vendorError };
     }
 
+    Cookies.set("vendor_session", JSON.stringify(data), { expires: 2 });
     toast.success("Login successful!");
     Router.push(`/vendor/${vendorData.company_name}`);
-    localStorage.setItem("vendor", JSON.stringify(vendorData));
     return { user: data.user, vendor: vendorData };
   }
 
   return { data, error: null };
-};
-
-export const fetchVendorData = async (company_name) => {
-  const { data: vendorData, error } = await supabase
-    .from("vendors")
-    .select("*")
-    .eq("company_name", company_name)
-    .single();
-
-  if (error || !vendorData) {
-    console.error("Error fetching vendor data:", error?.message);
-    return { vendor: null, error };
-  }
-  return { vendor: vendorData, error: null };
 };
 
 export const getSession = async () => {
