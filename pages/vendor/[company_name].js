@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { fetchVendorData, getSession } from "../../utils/supabaseAuth";
-import { fetchProducts } from "../api/vendor";
+import { getSession } from "../../utils/supabaseAuth";
+import { fetchProducts, fetchVendorData } from "../api/vendor";
 import Link from "next/link";
 import {
   FaBoxOpen,
@@ -45,7 +45,7 @@ const VendorPage = () => {
   if (isLoading || !vendor) return <div>Loading...</div>;
 
   return (
-    <div className="flex bg-gray-100 w-full">
+    <div className="container flex bg-gray-100 w-full">
       <div className="flex-1 py-8">
         <div className="p-8 max-w-5xl mx-auto">
           {products.length > 0 ? (
@@ -99,7 +99,7 @@ const VendorPage = () => {
                     Start by adding products to your catalog.
                   </p>
                   <Link
-                    href="/vendor/products/new"
+                    href="/vendor/products/"
                     className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
                   >
                     Add Product

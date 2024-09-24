@@ -10,11 +10,11 @@ const VendorLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className="flex-1 flex flex-col">
-        <Navbar toggleSidebar={toggleSidebar} />
-        <main className="flex-1 p-4">{children}</main>
+      <div className="flex flex-col w-full">
+        <Navbar vendorName="John Doe" />
+        <main className="p-4 h-full mt-10 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
