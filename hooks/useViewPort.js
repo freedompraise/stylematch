@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 
 export const useViewPort = () => {
-  const [width, setWidth] = useState(null); // Initially set to null to avoid SSR issues
+  const [width, setWidth] = useState(null);
 
   useEffect(() => {
-    // Check if window is available (i.e., client-side rendering)
     if (typeof window !== "undefined") {
       const handleResize = () => setWidth(window.innerWidth);
       setWidth(window.innerWidth); // Set initial width
