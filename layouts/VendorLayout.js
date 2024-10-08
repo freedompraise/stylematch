@@ -1,20 +1,28 @@
-import { useState } from "react";
-import Navbar from "../components/Vendor/Navbar";
-import Sidebar from "../components/Vendor/Sidebar";
+import { useThemeContext } from "../context/ThemeContext";
+import { useViewPort } from "hooks/useViewPort";
+import TopNavbar from "./TopNavbar";
+import LeftSidebar from "./LeftSidebar";
+import Footer from "./Footer";
 
 const VendorLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const { width } = useViewPort();
+  const { sideNavMode } = useThemeContext();
 
   return (
-    <div className="flex h-screen">
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className="flex flex-col w-full">
-        <Navbar vendorName="John Doe" />
-        <main className="p-4 h-full mt-10 overflow-y-auto">{children}</main>
+    <div className="flex">
+      <LeftSidebar />
+      <div
+        className={`${
+          sideNavMode === "sm" && width < 1024
+            ? "translate-x-0"
+            : "-translate-x-64"
+        } transform transition-transform duration-300 ease-in-out`}
+      >
+        <div className="w-full">
+          <TopNavbar />
+          <main className="container mx-auto px-4 py-8">{children}</main>
+          <Footer />
+        </div>
       </div>
     </div>
   );
