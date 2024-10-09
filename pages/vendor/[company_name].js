@@ -45,7 +45,7 @@ const VendorPage = () => {
   if (isLoading || !vendor) return <div>Loading...</div>;
 
   return (
-    <div className="container flex bg-gray-100 w-full">
+    <div className="container flex w-full">
       <div className="flex-1 py-8">
         <div className="p-4 max-w-5xl mx-auto">
           {products.length > 0 ? (
