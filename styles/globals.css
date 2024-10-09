@@ -8,8 +8,16 @@ body {
 }
 
 body {
+  margin: 0;
+  padding: 0;
   font-family: "Nunito", sans-serif;
   background-color: #f7fafc;
+}
+
+@media (max-width: 1024px) {
+  .ml-64 {
+    margin-left: 0;
+  }
 }
 
 /* Preloader */
@@ -58,7 +66,7 @@ body {
 }
 
 /* page and Stuff */
-.page-wrapper {
+/* .page-wrapper {
   @apply flex flex-col min-h-screen;
   padding-top: 64px;
 }
@@ -76,10 +84,6 @@ body {
   .page-content {
     @apply px-8;
   }
-}
+} */
 
 /* Sidebar */
-
-.enlarge-menu-all {
-  @apply translate-x-0 md:translate-x-0;
-}
