@@ -53,17 +53,17 @@ const ProductList = () => {
   };
 
   const handleAddProduct = () => {
-    // Redirect to Add Product Page
+    // Redirect to the add product page
   };
 
   return (
-    <div className="p-4 main-content">
+    <div className="container p-4 main-content">
       <div className="flex justify-between mb-4">
-        <Typography variant="h4">Product List</Typography>
+        <Typography variant="h4">Products</Typography>
         <Button
           variant="contained"
-          startIcon={<Add />}
           color="primary"
+          startIcon={<Add />}
           onClick={handleAddProduct}
         >
           Add Product
