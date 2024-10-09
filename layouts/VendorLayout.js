@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TopNavbar from "./TopNavbar";
 import DropdownNav from "./DropdownNav";
+import Footer from "./Footer";
 
 const VendorLayout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -23,6 +24,9 @@ const VendorLayout = ({ children }) => {
 
       {/* Main Content */}
       <main className="flex-1 bg-white p-6">{children}</main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

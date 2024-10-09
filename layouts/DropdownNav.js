@@ -3,14 +3,17 @@ import {
   faHome,
   faUser,
   faShoppingCart,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 
 const DropdownNav = ({ closeDropdown }) => {
   return (
-    <div
-      className="fixed top-0 left-0 w-full h-1/4 bg-blue-900 text-white z-40 flex flex-col justify-center"
-      onClick={closeDropdown}
-    >
+    <div className="fixed top-0 left-0 h-full w-64 bg-blue-900 text-white z-50">
+      <div className="flex justify-end p-4">
+        <button onClick={closeDropdown}>
+          <FontAwesomeIcon icon={faTimes} className="text-3xl" />
+        </button>
+      </div>
       <ul className="space-y-4 px-6">
         <li className="hover:bg-blue-700 p-2">
           <FontAwesomeIcon icon={faHome} className="mr-2" />
