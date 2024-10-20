@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "../../utils/supabaseAuth";
-import { fetchProducts, fetchVendorData } from "../api/vendor";
+import { fetchVendorData } from "../api/vendor";
+import { fetchProducts } from "../api/product";
 import Link from "next/link";
 import {
   FaBoxOpen,

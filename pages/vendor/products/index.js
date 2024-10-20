@@ -14,12 +14,14 @@ import {
   deleteProduct,
   updateProductDiscount,
 } from "../../api/product";
+import { useRouter } from "next/router";
 import { toast } from "sonner";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function loadProducts() {
@@ -53,7 +55,7 @@ const ProductList = () => {
   };
 
   const handleAddProduct = () => {
-    // Redirect to the add product page
+    router.push("/vendor/products/add");
   };
 
   return (

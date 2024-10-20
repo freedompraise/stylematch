@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const DropdownNav = ({ closeDropdown }) => {
   return (
-    <div className="fixed top-0 left-0 h-full w-64 bg-blue-900 text-white z-50">
+    <div className="fixed top-0 left-0 h-full w-64 bg-indigo-900 text-white z-50">
       <div className="flex justify-end p-4">
         <button onClick={closeDropdown}>
           <FontAwesomeIcon icon={faTimes} className="text-3xl" />
