@@ -1,5 +1,19 @@
 import { supabase } from "../../utils/supabaseClient";
 
+export const categories = [
+  "Clothing",
+  "Accessories",
+  "Footwear",
+  "Bags",
+  "Jewelry",
+  "Beauty",
+  "Home Decor",
+  "Art",
+  "Electronics",
+  "Toys",
+];
+export const variants = ["Small", "Medium", "Large", "Extra Large"];
+
 export const fetchProducts = async () => {
   const { data, error } = await supabase.from("products").select("*");
   if (error) throw error;
