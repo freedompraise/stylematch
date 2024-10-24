@@ -4,12 +4,22 @@ import {
   faUser,
   faShoppingCart,
   faTimes,
+  faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { useRouter } from "next/router";
 import { faProductHunt } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
+import { useAuth } from "context/useAuthContext";
 
 const DropdownNav = ({ closeDropdown }) => {
+  const { removeSession } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await removeSession();
+    router.push("/auth");
+  };
+
   return (
     <div className="fixed top-0 left-0 h-full lg:w-80 w-64 bg-white text-black z-50">
       <div className="flex justify-end p-4">
@@ -38,6 +48,15 @@ const DropdownNav = ({ closeDropdown }) => {
           Orders
         </li>
       </ul>
+      <div className="flex justify-center p-4">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+        >
+          <FontAwesomeIcon icon={faSignOut} className="mr-2" />
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
