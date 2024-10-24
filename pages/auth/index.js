@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { signUpVendor, loginVendor } from "../../utils/supabaseAuth";
+import { signUpVendor } from "../../utils/supabaseAuth";
 import { toast } from "sonner";
+import { useAuth } from "context/useAuthContext";
+import { useRouter } from "next/router";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,6 +10,8 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const { saveSession } = useAuth();
+  const router = useRouter();
 
   const togglePane = () => setIsLogin(!isLogin);
 
@@ -24,17 +28,20 @@ const AuthPage = () => {
       return;
     }
 
-    if (data) {
-      toast.success("Signup successful! Please confirm your email.");
-      window.location.href = "/auth/confirm-email";
-    }
+    toast.success("Signup successful! Please confirm your email.");
+    router.push("/auth/confirm-email");
   };
 
   const handleLogin = async () => {
-    const { data, error } = await loginVendor(email, password);
+    const { vendor, error } = await saveSession(email, password);
+
     if (error) {
-      toast.error("Login error: " + error.message);
+      toast.error(error.message);
       return;
+    }
+
+    if (vendor) {
+      router.push(`/vendor/${vendor.company_name}`);
     }
   };
 

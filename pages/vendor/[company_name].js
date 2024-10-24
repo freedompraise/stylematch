@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { getSession } from "../../utils/supabaseAuth";
-import { fetchVendorData } from "../api/vendor";
+import { useAuth } from "context/useAuthContext";
 import { fetchProducts } from "../api/product";
 import Link from "next/link";
 import {
@@ -12,38 +11,42 @@ import {
 } from "react-icons/fa";
 
 const VendorPage = () => {
-  const [vendor, setVendor] = useState(null);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { company_name } = router.query;
 
+  const { vendor, isLoading: authLoading } = useAuth();
+
   useEffect(() => {
-    const checkSessionAndFetchData = async () => {
-      const session = await getSession();
-      if (!session?.session) {
+    const fetchData = async () => {
+      if (!vendor) {
         router.push("/auth");
         return;
       }
 
-      const { user } = session.session;
-      const { vendor: vendorData, error } = await fetchVendorData(company_name);
-      if (error || vendorData.user_id !== user.id) {
+      if (vendor.company_name !== company_name) {
         router.push("/auth");
-      } else {
-        setVendor(vendorData);
-        const { products: vendorProducts } = await fetchProducts(company_name);
-        setProducts(vendorProducts || []);
-        setIsLoading(false);
+        return;
       }
+
+      const { products: vendorProducts } = await fetchProducts(company_name);
+      setProducts(vendorProducts || []);
+      setIsLoading(false);
     };
 
-    if (company_name) {
-      checkSessionAndFetchData();
+    if (!authLoading && company_name) {
+      fetchData();
     }
-  }, [company_name, router]);
+  }, [company_name, vendor, authLoading, router]);
 
-  if (isLoading || !vendor) return <div>Loading...</div>;
+  if (authLoading || isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!vendor) {
+    return <div>Unauthorized. Redirecting...</div>;
+  }
 
   return (
     <div className="container flex w-full">
@@ -99,12 +102,12 @@ const VendorPage = () => {
                   <p className="text-gray-600 mb-4">
                     Start by adding products to your catalog.
                   </p>
-                  <Link
-                    href="/vendor/products/"
+                  <button
+                    onClick={() => router.push("/vendor/products/add")}
                     className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
                   >
                     Add Product
-                  </Link>
+                  </button>
                 </div>
 
                 <div className="bg-white shadow-lg p-6 rounded-lg transform hover:scale-105 transition duration-200">

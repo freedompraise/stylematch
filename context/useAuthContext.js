@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { setCookie, hasCookie, deleteCookie } from "cookies-next";
-import { getSession, loginVendor } from "../utils/supabaseAuth";
-import { supabase } from "../utils/supabaseClient";
+import { getSession, loginVendor, logoutVendor } from "../utils/supabaseAuth";
 
 const AuthContext = createContext({
   vendor: null,
@@ -24,15 +23,20 @@ const AuthProvider = ({ children }) => {
         const sessionData = await getSession();
 
         if (sessionData?.user) {
-          const { user: vendorData, error: vendorError } = await loginVendor(
-            sessionData.user.email
+          const {
+            user,
+            vendor,
+            error: vendorError,
+          } = await loginVendor(
+            sessionData.user.email,
+            sessionData.user.password
           );
 
           if (vendorError) {
             console.error("Error fetching vendor data:", vendorError?.message);
             setError(vendorError);
           } else {
-            setVendor(vendorData);
+            setVendor(vendor);
           }
         }
       }
@@ -49,19 +53,16 @@ const AuthProvider = ({ children }) => {
 
     if (error) {
       setError(error);
-      return;
+      return { data: null, error };
     }
 
     setVendor(vendor);
-
-    // Set a cookie for client-side session management
-    setCookie("vendor_session", JSON.stringify(vendor), { expires: 2 });
-
-    toast.success("Login successful!");
+    setCookie("vendor_session", JSON.stringify(vendor));
+    return { vendor, error: null };
   };
 
   const removeSession = async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await logoutVendor();
     if (error) {
       console.error("Error signing out:", error.message);
       setError(error);
@@ -70,7 +71,6 @@ const AuthProvider = ({ children }) => {
 
     setVendor(null);
     deleteCookie("vendor_session");
-
     toast.success("Logged out successfully!");
   };
 

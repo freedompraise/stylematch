@@ -1,7 +1,5 @@
 import { supabase } from "./supabaseClient";
 import { toast } from "sonner";
-import Router from "next/router";
-import Cookies from "js-cookie";
 
 export const signUpVendor = async (name, email, company_name, password) => {
   if (!name || !email || !company_name || !password) {
@@ -13,10 +11,7 @@ export const signUpVendor = async (name, email, company_name, password) => {
     email,
     password,
     options: {
-      data: {
-        name,
-        company_name,
-      },
+      data: { name, company_name },
     },
   });
 
@@ -46,7 +41,6 @@ export const signUpVendor = async (name, email, company_name, password) => {
 
 export const loginVendor = async (email, password) => {
   if (!email || !password) {
-    toast.error("Please provide both email and password.");
     return { data: null, error: new Error("Missing credentials") };
   }
 
@@ -72,16 +66,18 @@ export const loginVendor = async (email, password) => {
       return { data: null, error: vendorError };
     }
 
-    Cookies.set("vendor_session", JSON.stringify(data), { expires: 2 });
-    toast.success("Login successful!");
-    Router.push(`/vendor/${vendorData.company_name}`);
     return { user: data.user, vendor: vendorData };
   }
 
-  return { data, error: null };
+  return { data: null, error: null };
 };
 
 export const getSession = async () => {
   const { data } = await supabase.auth.getSession();
   return data;
+};
+
+export const logoutVendor = async () => {
+  const { error } = await supabase.auth.signOut();
+  return { error };
 };
