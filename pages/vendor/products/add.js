@@ -5,6 +5,7 @@ import { createProduct, categories, colors, sizes } from "@/api/product";
 import ImageUploader from "@/FileUploader/ImageUploader";
 import { ArrowBack } from "@mui/icons-material";
 import { useAuth } from "context/useAuthContext";
+import { uploadImageToCloudinary } from "@/cloudinary";
 
 const AddProduct = () => {
   const { vendor } = useAuth();
@@ -34,19 +35,15 @@ const AddProduct = () => {
   }, [vendor]);
 
   const [isDiscountChecked, setIsDiscountChecked] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = (imageUrl) => {
-    setProduct((prev) => ({ ...prev, image_url: imageUrl }));
-  };
-
-  const handleImageRemove = () => {
-    setProduct((prev) => ({ ...prev, image_url: "" }));
+  const handleImageSelect = (file) => {
+    setSelectedImage(file);
   };
 
   const handleBack = () => {
@@ -57,6 +54,10 @@ const AddProduct = () => {
     e.preventDefault();
 
     try {
+      if (selectedImage) {
+        const imageUrl = await uploadImageToCloudinary(selectedImage);
+        setProduct((prev) => ({ ...prev, image_url: imageUrl }));
+      }
       await createProduct(product);
       toast.success("Product added successfully!");
       router.push("/vendor/products");
@@ -278,29 +279,7 @@ const AddProduct = () => {
               <label className="block text-sm font-semibold mb-1">
                 Product Image
               </label>
-              <ImageUploader
-                onImageUpload={(url) => {
-                  handleImageUpload(url);
-                  setImagePreview(url);
-                }}
-              />
-
-              {imagePreview && (
-                <div className="mt-4">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-40 h-40 object-cover mb-2"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleImageRemove}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Remove Image
-                  </button>
-                </div>
-              )}
+              <ImageUploader onImageSelect={handleImageSelect} />
             </div>
 
             <div className="flex justify-end">
