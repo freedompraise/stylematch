@@ -12,7 +12,8 @@ export const categories = [
   "Electronics",
   "Toys",
 ];
-export const variants = ["Small", "Medium", "Large", "Extra Large"];
+export const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+export const colors = ["Red", "Blue", "Green", "Yellow", "Black", "White"];
 
 export const fetchProducts = async () => {
   const { data, error } = await supabase.from("products").select("*");
