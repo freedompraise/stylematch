@@ -95,7 +95,6 @@ const AddProduct = () => {
         updatedProduct.image_url = imageUrl;
       }
 
-      console.log("Product to be added:", updatedProduct);
       await createProduct(updatedProduct);
       toast.success("Product added successfully!");
       router.push("/vendor/products");
