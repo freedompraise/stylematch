@@ -3,11 +3,14 @@ import Image from "next/image";
 
 const ImageUploader = ({ onImageSelect }) => {
   const [imagePreview, setImagePreview] = useState(null);
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file || file.size > 1000000) {
-      alert("Please select an image smaller than 1MB");
+    if (!file || file.size > 1000000 || !allowedTypes.includes(file.type)) {
+      alert(
+        "Please select an image smaller than 1MB and in PNG or JPEG format"
+      );
       return;
     }
 
