@@ -12,16 +12,16 @@ const AddProduct = () => {
   const [product, setProduct] = useState({
     name: "",
     description: "",
-    price: "",
-    stock_quantity: "",
-    vendor_id: "",
+    price: null,
+    stock_quantity: null,
+    vendor_id: null,
     image_url: "",
     category: "",
     color: "",
     size: "",
-    discount_price: "",
-    discount_start: "",
-    discount_end: "",
+    discount_price: null,
+    discount_start: null,
+    discount_end: null,
   });
   const router = useRouter();
 
@@ -37,9 +37,29 @@ const AddProduct = () => {
   const [isDiscountChecked, setIsDiscountChecked] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case "price":
+      case "discount_price":
+        return value && !isNaN(value) ? parseFloat(value) : null;
+      case "stock_quantity":
+        return value && Number.isInteger(parseInt(value))
+          ? parseInt(value)
+          : null;
+      case "discount_start":
+      case "discount_end":
+        return value || null;
+      default:
+        return value;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({ ...prev, [name]: value }));
+    setProduct((prev) => ({
+      ...prev,
+      [name]: validateField(name, value),
+    }));
   };
 
   const handleImageSelect = (file) => {
@@ -52,18 +72,36 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let isValid = true;
 
-    try {
+    let updatedProduct = { ...product };
+
+    if (!updatedProduct.price || isNaN(updatedProduct.price)) {
+      isValid = false;
+      toast.error("Price must be a number");
+    }
+
+    if (
+      !updatedProduct.stock_quantity ||
+      isNaN(updatedProduct.stock_quantity)
+    ) {
+      isValid = false;
+      toast.error("Stock quantity must be a number");
+    }
+
+    if (isValid) {
       if (selectedImage) {
         const imageUrl = await uploadImageToCloudinary(selectedImage);
-        setProduct((prev) => ({ ...prev, image_url: imageUrl }));
+        updatedProduct.image_url = imageUrl;
       }
-      await createProduct(product);
+
+      console.log("Product to be added:", updatedProduct);
+      await createProduct(updatedProduct);
       toast.success("Product added successfully!");
       router.push("/vendor/products");
-    } catch (error) {
+    } else {
       toast.error("Error adding product. Please try again.");
-      console.error("Error:", error);
+      console.error("Error adding product");
     }
   };
 
