@@ -5,14 +5,16 @@ import { fetchProducts } from "../../api/product";
 import ProductCard from "./components/ProductCard";
 import { useRouter } from "next/router";
 import { Add } from "@mui/icons-material";
+import { useAuth } from "context/useAuthContext";
 
 const ProductList = () => {
+  const { vendor } = useAuth();
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     async function loadProducts() {
-      const data = await fetchProducts();
+      const data = await fetchProducts(vendor.user_id);
       setProducts(data);
     }
     loadProducts();
