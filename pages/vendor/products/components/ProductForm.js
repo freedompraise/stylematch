@@ -3,7 +3,7 @@ import DiscountSection from "./DiscountSection";
 import ImageUploader from "@/FileUploader/ImageUploader";
 
 const ProductForm = ({
-  product,
+  product = {},
   setProduct,
   handleSubmit,
   handleImageSelect,
