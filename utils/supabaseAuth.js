@@ -72,11 +72,6 @@ export const loginVendor = async (email, password) => {
   return { data: null, error: null };
 };
 
-export const getSession = async () => {
-  const { data } = await supabase.auth.getSession();
-  return data;
-};
-
 export const logoutVendor = async () => {
   const { error } = await supabase.auth.signOut();
   return { error };

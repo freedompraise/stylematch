@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
-import { setCookie, hasCookie, deleteCookie } from "cookies-next";
-import { getSession, loginVendor, logoutVendor } from "../utils/supabaseAuth";
+import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
+import { loginVendor, logoutVendor } from "../utils/supabaseAuth";
 
 const AuthContext = createContext({
   vendor: null,
@@ -20,16 +20,12 @@ const AuthProvider = ({ children }) => {
     const initialize = async () => {
       setIsLoading(true);
       if (hasCookie("vendor_session")) {
-        const sessionData = await getSession();
+        const sessionData = JSON.parse(getCookie("vendor_session"));
 
-        if (sessionData?.user) {
-          const {
-            user,
-            vendor,
-            error: vendorError,
-          } = await loginVendor(
-            sessionData.user.email,
-            sessionData.user.password
+        if (sessionData?.email && sessionData?.password) {
+          const { vendor, error: vendorError } = await loginVendor(
+            sessionData.email,
+            sessionData.password
           );
 
           if (vendorError) {
@@ -57,7 +53,7 @@ const AuthProvider = ({ children }) => {
     }
 
     setVendor(vendor);
-    setCookie("vendor_session", JSON.stringify(vendor));
+    setCookie("vendor_session", JSON.stringify({ email, password }));
     return { vendor, error: null };
   };
 
