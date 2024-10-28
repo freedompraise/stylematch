@@ -22,7 +22,7 @@ const ImageUploader = ({ onImageSelect }) => {
 
   return (
     <div>
-      <input type="file" onChange={handleImageChange} />
+      <input type="file" onChange={handleImageChange} required />
       {imagePreview && (
         <Image
           src={imagePreview}
