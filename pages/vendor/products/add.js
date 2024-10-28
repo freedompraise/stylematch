@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { createProduct } from "@/api/product";
 import { useAuth } from "context/useAuthContext";
 import { uploadImageToCloudinary } from "@/cloudinary";
-import AuthCheck from "./components/AuthCheck";
 import ProductForm from "./components/ProductForm";
 
 const AddProduct = () => {
@@ -58,18 +57,16 @@ const AddProduct = () => {
   };
 
   return (
-    <AuthCheck vendor={vendor}>
-      <div className="mx-auto bg-gray-100 p-6 rounded-md shadow-md">
-        <ProductForm
-          product={product}
-          setProduct={setProduct}
-          handleSubmit={handleSubmit}
-          handleImageSelect={setSelectedImage}
-          isDiscountChecked={isDiscountChecked}
-          setIsDiscountChecked={setIsDiscountChecked}
-        />
-      </div>
-    </AuthCheck>
+    <div className="mx-auto bg-gray-100 p-6 rounded-md shadow-md">
+      <ProductForm
+        product={product}
+        setProduct={setProduct}
+        handleSubmit={handleSubmit}
+        handleImageSelect={setSelectedImage}
+        isDiscountChecked={isDiscountChecked}
+        setIsDiscountChecked={setIsDiscountChecked}
+      />
+    </div>
   );
 };
 

@@ -21,24 +21,29 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initialize = async () => {
       setIsLoading(true);
-      if (hasCookie("vendor_session")) {
-        const sessionData = JSON.parse(getCookie("vendor_session"));
+      if (router.pathname !== "/auth") {
+        if (hasCookie("vendor_session")) {
+          const sessionData = JSON.parse(getCookie("vendor_session"));
 
-        if (sessionData?.email && sessionData?.password) {
-          const { vendor, error: vendorError } = await loginVendor(
-            sessionData.email,
-            sessionData.password
-          );
+          if (sessionData?.email && sessionData?.password) {
+            const { vendor, error: vendorError } = await loginVendor(
+              sessionData.email,
+              sessionData.password
+            );
 
-          if (vendorError) {
-            console.error("Error fetching vendor data:", vendorError?.message);
-            setError(vendorError);
-          } else {
-            setVendor(vendor);
+            if (vendorError) {
+              console.error(
+                "Error fetching vendor data:",
+                vendorError?.message
+              );
+              setError(vendorError);
+            } else {
+              setVendor(vendor);
+            }
           }
+        } else {
+          router.push("/auth");
         }
-      } else {
-        router.push("/auth");
       }
       setIsLoading(false);
     };
