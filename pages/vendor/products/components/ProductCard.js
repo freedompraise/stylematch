@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
           {product.name}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          ${product.price}
+          NGN {product.price}
         </Typography>
         <IconButton
           aria-label="more options"
