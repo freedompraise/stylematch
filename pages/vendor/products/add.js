@@ -32,7 +32,7 @@ const AddProduct = () => {
     if (vendor) {
       setProduct((prevProduct) => ({
         ...prevProduct,
-        vendor_id: vendor.id,
+        vendor_id: vendor.user_id,
       }));
     }
   }, [vendor]);
