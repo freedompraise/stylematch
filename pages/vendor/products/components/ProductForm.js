@@ -10,14 +10,6 @@ const ProductForm = ({
   isDiscountChecked,
   setIsDiscountChecked,
 }) => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: validateField(name, value),
-    }));
-  };
-
   const validateField = (name, value) => {
     switch (name) {
       case "price":
@@ -33,6 +25,14 @@ const ProductForm = ({
       default:
         return value;
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct((prev) => ({
+      ...prev,
+      [name]: validateField(name, value),
+    }));
   };
 
   return (
