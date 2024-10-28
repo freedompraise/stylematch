@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { toast } from "sonner";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import { loginVendor, logoutVendor } from "../utils/supabaseAuth";
@@ -15,6 +16,7 @@ const AuthProvider = ({ children }) => {
   const [vendor, setVendor] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const initialize = async () => {
@@ -35,12 +37,14 @@ const AuthProvider = ({ children }) => {
             setVendor(vendor);
           }
         }
+      } else {
+        router.push("/auth");
       }
       setIsLoading(false);
     };
 
     initialize();
-  }, []);
+  }, [router]);
 
   const saveSession = async (email, password) => {
     setIsLoading(true);
@@ -68,6 +72,7 @@ const AuthProvider = ({ children }) => {
     setVendor(null);
     deleteCookie("vendor_session");
     toast.success("Logged out successfully!");
+    router.push("/auth");
   };
 
   const value = {
