@@ -58,10 +58,10 @@ const AuthProvider = ({ children }) => {
 
     if (error) {
       setError(error);
-      return { data: null, error };
+      return { vendor: null, error };
     }
 
-    setVendor(vendor);
+    setVendor(vendor); // Set the vendor in context state
     setCookie("vendor_session", JSON.stringify({ email, password }));
     return { vendor, error: null };
   };

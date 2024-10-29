@@ -5,13 +5,16 @@ import { fetchProducts } from "../../api/product";
 import ProductCard from "./components/ProductCard";
 import { useRouter } from "next/router";
 import { Add } from "@mui/icons-material";
+import { useAuth } from "context/useAuthContext";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
+  const { vendor } = useAuth();
 
   useEffect(() => {
     async function loadProducts() {
+      console.log("Vendor", vendor);
       const data = await fetchProducts();
       setProducts(data);
     }
@@ -29,6 +32,7 @@ const ProductList = () => {
         <Button
           variant="contained"
           color="primary"
+          size="small"
           startIcon={<Add />}
           onClick={handleAddProduct}
         >

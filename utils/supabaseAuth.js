@@ -63,10 +63,9 @@ export const loginVendor = async (email, password) => {
 
     if (vendorError || !vendorData) {
       console.error("Error fetching vendor data:", vendorError?.message);
-      return { data: null, error: vendorError };
+      return { vendor: null, error: vendorError };
     }
-
-    return { user: data.user, vendor: vendorData };
+    return { vendor: vendorData, error: null };
   }
 
   return { data: null, error: null };
