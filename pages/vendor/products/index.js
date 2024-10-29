@@ -9,16 +9,40 @@ import { useAuth } from "context/useAuthContext";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
   const { vendor } = useAuth();
 
   useEffect(() => {
-    async function loadProducts() {
-      const data = await fetchProducts(vendor.user_id);
-      setProducts(data);
+    if (!vendor) {
+      setError("Vendor data is not available. Please log in again.");
+      setLoading(false);
+      return;
     }
+
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts(vendor.user_id);
+
+        if (!data || data.length === 0) {
+          setError("No products found. Please add new products.");
+          setProducts([]);
+        } else {
+          setProducts(data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadProducts();
-  }, []);
+  }, [vendor]);
 
   const handleAddProduct = () => {
     router.push("/vendor/products/add");
@@ -39,7 +63,15 @@ const ProductList = () => {
         </Button>
       </div>
 
-      {products.length === 0 ? (
+      {loading ? (
+        <Typography variant="h6" color="textSecondary">
+          Loading products...
+        </Typography>
+      ) : error ? (
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      ) : products.length === 0 ? (
         <Typography variant="h6" color="textSecondary">
           No products found. Please add new products.
         </Typography>

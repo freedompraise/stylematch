@@ -10,7 +10,7 @@ import { MoreVert } from "@mui/icons-material";
 import ProductActions from "./ProductActions";
 import { useState } from "react";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product = {} }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -25,17 +25,17 @@ const ProductCard = ({ product }) => {
     <Card>
       <CardMedia
         component="img"
-        alt={product.name}
+        alt={product.name || "Product"}
         height="150"
         image={product.image_url || "/placeholder.jpg"}
-        title={product.name}
+        title={product.name || "Product"}
       />
       <CardContent>
         <Typography variant="h6" className="font-bold mb-2">
-          {product.name}
+          {product.name || "Unnamed Product"}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          NGN {product.price}
+          NGN {product.price || "0.00"}
         </Typography>
         <IconButton
           aria-label="more options"
