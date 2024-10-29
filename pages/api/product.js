@@ -20,11 +20,8 @@ export const colors = [
   "White",
 ];
 
-export const fetchProducts = async (id) => {
-  const { data, error } = await supabase
-    .from("products")
-    .select()
-    .eq("vendor_id", id);
+export const fetchProducts = async () => {
+  const { data, error } = await supabase.from("products").select("*");
   if (error) throw error;
   return data;
 };
