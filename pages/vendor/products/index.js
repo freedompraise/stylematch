@@ -14,8 +14,7 @@ const ProductList = () => {
 
   useEffect(() => {
     async function loadProducts() {
-      console.log("Vendor", vendor);
-      const data = await fetchProducts();
+      const data = await fetchProducts(vendor.user_id);
       setProducts(data);
     }
     loadProducts();
