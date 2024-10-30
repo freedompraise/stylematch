@@ -9,7 +9,7 @@ import {
   deleteProduct,
   deleteProductImage,
 } from "../../../api/product";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaPiggyBank } from "react-icons/fa";
 
 const ProductActions = ({ product, anchorEl, handleClose }) => {
@@ -18,6 +18,12 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
   const [isHottestOffer, setIsHottestOffer] = useState(
     product.is_hottest_offer || false
   );
+
+  useEffect(() => {
+    if (product) {
+      setIsHottestOffer(product.is_hottest_offer);
+    }
+  }, [product]);
 
   if (!product) {
     return (
