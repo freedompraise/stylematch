@@ -1,6 +1,5 @@
-// ProductActions.js
 import { useRouter } from "next/router";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import { Link } from "@mui/icons-material";
 import { toast } from "sonner";
 import DiscountModal from "./DiscountModal";
@@ -14,14 +13,30 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
   const router = useRouter();
   const [discountModalOpen, setDiscountModalOpen] = useState(false);
 
-  const handleHottestToggle = async () => {
-    await toggleHottestOffer(product.id, !product.is_hottest_offer);
-    toast.success(
-      `Product is now ${
-        !product.is_hottest_offer ? "activated" : "deactivated"
-      } as hottest offer!`
+  if (!product) {
+    return (
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem disabled>
+          <Typography color="error">Product data is not available</Typography>
+        </MenuItem>
+      </Menu>
     );
-    handleClose();
+  }
+
+  const handleHottestToggle = async () => {
+    try {
+      await toggleHottestOffer(product.id, !product.is_hottest_offer);
+      toast.success(
+        `Product is now ${
+          !product.is_hottest_offer ? "activated" : "deactivated"
+        } as hottest offer!`
+      );
+    } catch (error) {
+      console.error("Failed to toggle hottest offer:", error);
+      toast.error("Failed to toggle hottest offer. Please try again.");
+    } finally {
+      handleClose();
+    }
   };
 
   const handleDiscountToggle = () => {
