@@ -1,58 +1,48 @@
+// ProductList.js
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import { MoreVert, Add, Delete, Edit } from "@mui/icons-material";
-import {
-  fetchProducts,
-  deleteProduct,
-  updateProductDiscount,
-} from "../../api/product";
+import { Grid, Typography, Button } from "@mui/material";
+import { fetchProducts } from "../../api/product";
+import ProductCard from "./components/ProductCard";
 import { useRouter } from "next/router";
-import { toast } from "sonner";
+import { Add } from "@mui/icons-material";
+import { useAuth } from "context/useAuthContext";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
+  const { vendor } = useAuth();
 
   useEffect(() => {
-    async function loadProducts() {
-      const data = await fetchProducts();
-      setProducts(data);
+    if (!vendor) {
+      setError("Vendor data is not available. Please log in again.");
+      setLoading(false);
+      return;
     }
+
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts(vendor.user_id);
+
+        if (!data || data.length === 0) {
+          setError("No products found. Please add new products.");
+          setProducts([]);
+        } else {
+          setProducts(data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadProducts();
-  }, []);
-
-  const handleMenuClick = (event, product) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedProduct(product);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedProduct(null);
-  };
-
-  const handleDelete = async (productId) => {
-    await deleteProduct(productId);
-    setProducts(products.filter((p) => p.id !== productId));
-    toast.success("Product deleted successfully");
-    handleMenuClose();
-  };
-
-  const handleDiscountChange = async (productId, discountValue) => {
-    await updateProductDiscount(productId, discountValue);
-    toast.success("Discount updated successfully");
-    handleMenuClose();
-  };
+  }, [vendor]);
 
   const handleAddProduct = () => {
     router.push("/vendor/products/add");
@@ -65,6 +55,7 @@ const ProductList = () => {
         <Button
           variant="contained"
           color="primary"
+          size="small"
           startIcon={<Add />}
           onClick={handleAddProduct}
         >
@@ -72,46 +63,31 @@ const ProductList = () => {
         </Button>
       </div>
 
-      {products.length === 0 ? (
+      {loading ? (
+        <Typography variant="h6" color="textSecondary">
+          Loading products...
+        </Typography>
+      ) : error ? (
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      ) : products.length === 0 ? (
         <Typography variant="h6" color="textSecondary">
           No products found. Please add new products.
         </Typography>
       ) : (
-        products.map((product) => (
-          <Card key={product.id} className="mb-4">
-            <CardContent className="flex justify-between items-center">
-              <div>
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Price: ${product.price}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Stock: {product.stock_quantity}
-                </Typography>
-              </div>
-
-              <div>
-                <IconButton onClick={(e) => handleMenuClick(e, product)}>
-                  <MoreVert />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl && selectedProduct?.id === product.id)}
-                  onClose={handleMenuClose}
-                >
-                  <MenuItem
-                    onClick={() => handleDiscountChange(product.id, 10)}
-                  >
-                    <Edit fontSize="small" /> Set 10% Discount
-                  </MenuItem>
-                  <MenuItem onClick={() => handleDelete(product.id)}>
-                    <Delete fontSize="small" /> Delete
-                  </MenuItem>
-                </Menu>
-              </div>
-            </CardContent>
-          </Card>
-        ))
+        <>
+          <Typography variant="h4" className="mb-4" align="center">
+            Product List
+          </Typography>
+          <Grid container spacing={3}>
+            {products.map((product) => (
+              <Grid item xs={6} sm={4} md={3} key={product.id}>
+                <ProductCard product={product} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
       )}
     </div>
   );

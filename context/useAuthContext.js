@@ -12,6 +12,8 @@ const AuthContext = createContext({
   removeSession: async () => {},
 });
 
+let vendorCache = null;
+
 const AuthProvider = ({ children }) => {
   const [vendor, setVendor] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,9 +41,10 @@ const AuthProvider = ({ children }) => {
               setError(vendorError);
             } else {
               setVendor(vendor);
+              vendorCache = vendor;
             }
           }
-        } else {
+        } else if (!hasCookie("vendor_session")) {
           router.push("/auth");
         }
       }
@@ -53,15 +56,23 @@ const AuthProvider = ({ children }) => {
 
   const saveSession = async (email, password) => {
     setIsLoading(true);
+
+    if (vendorCache) {
+      setVendor(vendorCache);
+      setIsLoading(false);
+      return { vendor: vendorCache, error: null };
+    }
+
     const { vendor, error } = await loginVendor(email, password);
     setIsLoading(false);
 
     if (error) {
       setError(error);
-      return { data: null, error };
+      return { vendor: null, error };
     }
 
     setVendor(vendor);
+    vendorCache = vendor;
     setCookie("vendor_session", JSON.stringify({ email, password }));
     return { vendor, error: null };
   };

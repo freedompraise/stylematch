@@ -30,7 +30,7 @@ const VendorPage = () => {
         return;
       }
 
-      const { products: vendorProducts } = await fetchProducts(company_name);
+      const { products: vendorProducts } = await fetchProducts(vendor.user_id);
       setProducts(vendorProducts || []);
       setIsLoading(false);
     };

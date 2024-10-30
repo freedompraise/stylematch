@@ -17,8 +17,9 @@ const DiscountSection = ({
 
       {isDiscountChecked && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+          {/* Discount Price */}
           <div>
-            <label className="block text-sm font-semibold mb-1">
+            <label className="block text-sm font-semibold">
               Discount Price (NGN)
             </label>
             <input
@@ -30,9 +31,32 @@ const DiscountSection = ({
               placeholder="Enter discount price"
             />
           </div>
-
-          {/* Discount Start and End Date */}
-          {/* Similarly structure date fields */}
+          {/* Discount Start Date */}
+          <div>
+            <label className="block text-sm font-semibold">
+              Discount Start Date
+            </label>
+            <input
+              type="date"
+              name="discount_start"
+              value={product.discount_start}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          {/* Discount End Date */}
+          <div>
+            <label className="block text-sm font-semibold">
+              Discount End Date
+            </label>
+            <input
+              type="date"
+              name="discount_end"
+              value={product.discount_end}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
         </div>
       )}
     </div>

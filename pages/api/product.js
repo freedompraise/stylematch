@@ -8,9 +8,6 @@ export const categories = [
   "Jewelry",
   "Beauty",
   "Home Decor",
-  "Art",
-  "Electronics",
-  "Toys",
 ];
 export const sizes = ["XS", "S", "M", "L", "XL", "XXL", "N/A"];
 export const colors = [
@@ -23,8 +20,11 @@ export const colors = [
   "White",
 ];
 
-export const fetchProducts = async () => {
-  const { data, error } = await supabase.from("products").select("*");
+export const fetchProducts = async (id) => {
+  const { data, error } = await supabase
+    .from("products")
+    .select()
+    .eq("vendor_id", id);
   if (error) throw error;
   return data;
 };
@@ -54,6 +54,15 @@ export const updateProductDiscount = async (id, discount) => {
   const { data, error } = await supabase
     .from("products")
     .update({ discount })
+    .eq("id", id);
+  if (error) throw error;
+  return data;
+};
+
+export const toggleHottestOffer = async (id, isHottestOffer) => {
+  const { data, error } = await supabase
+    .from("products")
+    .update({ is_hottest_offer: isHottestOffer })
     .eq("id", id);
   if (error) throw error;
   return data;
