@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
-import { Link } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import { toast } from "sonner";
 import DiscountModal from "./DiscountModal";
 import {
@@ -48,7 +48,7 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
   };
 
   const handleViewDetails = () => {
-    router.push(`/product/${product.id}`);
+    router.push(`/vendor/products/${product.id}`);
     handleClose();
   };
 
@@ -61,9 +61,9 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
         <MenuItem onClick={handleDiscountToggle}>Manage Discount</MenuItem>
         <MenuItem onClick={handleViewDetails}>
           <IconButton>
-            <Link />
+            <Edit />
           </IconButton>
-          View Details
+          Edit Product
         </MenuItem>
       </Menu>
       <DiscountModal

@@ -67,3 +67,9 @@ export const toggleHottestOffer = async (id, isHottestOffer) => {
   if (error) throw error;
   return data;
 };
+
+export const getProductById = async (id) => {
+  const { data, error } = await supabase.from("products").select().eq("id", id);
+  if (error) throw error;
+  return data[0];
+};
