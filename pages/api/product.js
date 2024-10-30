@@ -83,7 +83,6 @@ const getPublicId = (url) => {
 };
 
 export const deleteProduct = async (productId) => {
-  console.log("Deleting product with ID:", productId);
   const { data, error } = await supabase
     .from("products")
     .delete()
@@ -94,7 +93,6 @@ export const deleteProduct = async (productId) => {
 
 export const deleteProductImage = async (imageUrl) => {
   const publicId = getPublicId(imageUrl);
-  console.log("Deleting image with public ID:", publicId);
   await deleteImageFromCloudinary(publicId);
   return { message: "Image deleted successfully" };
 };

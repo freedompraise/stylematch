@@ -60,6 +60,7 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
       await deleteProductImage(product.image_url);
       await deleteProduct(product.id);
       toast.success("Product deleted successfully!");
+      router.push("/vendor/products");
     } catch (error) {
       console.error("Failed to delete product:", error);
       toast.error("Failed to delete product. Please try again.");
