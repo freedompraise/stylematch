@@ -12,6 +12,9 @@ import { useState } from "react";
 const ProductActions = ({ product, anchorEl, handleClose }) => {
   const router = useRouter();
   const [discountModalOpen, setDiscountModalOpen] = useState(false);
+  const [isHottestOffer, setIsHottestOffer] = useState(
+    product.is_hottest_offer || false
+  );
 
   if (!product) {
     return (
@@ -25,7 +28,8 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
 
   const handleHottestToggle = async () => {
     try {
-      await toggleHottestOffer(product.id, !product.is_hottest_offer);
+      await toggleHottestOffer(product.id, !isHottestOffer);
+      setIsHottestOffer(!isHottestOffer);
       toast.success(
         `Product is now ${
           !product.is_hottest_offer ? "activated" : "deactivated"
