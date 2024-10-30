@@ -1,4 +1,5 @@
 import { supabase } from "../../utils/supabaseClient";
+import { deleteImageFromCloudinary } from "@/cloudinary";
 
 export const categories = [
   "Clothing",
@@ -18,6 +19,11 @@ export const colors = [
   "Yellow",
   "Black",
   "White",
+  "Brown",
+  "Pink",
+  "Purple",
+  "Orange",
+  "N/A",
 ];
 
 export const fetchProducts = async (id) => {
@@ -44,12 +50,6 @@ export const updateProduct = async (id, updates) => {
   return data;
 };
 
-export const deleteProduct = async (id) => {
-  const { data, error } = await supabase.from("products").delete().eq("id", id);
-  if (error) throw error;
-  return data;
-};
-
 export const updateProductDiscount = async (id, discount) => {
   const { data, error } = await supabase
     .from("products")
@@ -72,4 +72,35 @@ export const getProductById = async (id) => {
   const { data, error } = await supabase.from("products").select().eq("id", id);
   if (error) throw error;
   return data[0];
+};
+
+// Hellper function to extract public_id from the image url
+const getPublicId = (url) => {
+  const parts = url.split("/");
+  const publicIdWithExtension = parts.slice(-2).join("/"); // e.g., "my-folder/image_name.jpg"
+  const publicId = publicIdWithExtension.replace(/\.[^/.]+$/, ""); // Removes the extension
+  return publicId;
+};
+
+export const deleteProduct = async (productId) => {
+  try {
+    // Fetch the product from the database
+    const product = await db.products.findById(productId);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    // Extract the public_id from the image URL
+    const imageUrl = product.image_url;
+    const publicId = getPublicId(imageUrl);
+
+    await deleteImageFromCloudinary(publicId);
+
+    await db.products.deleteById(productId);
+
+    return { message: "Product and associated image deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
 };

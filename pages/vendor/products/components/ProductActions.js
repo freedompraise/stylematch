@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
-import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Menu, MenuItem, IconButton, Typography, Switch } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import { toast } from "sonner";
 import DiscountModal from "./DiscountModal";
 import {
   toggleHottestOffer,
   updateProductDiscount,
+  deleteProduct,
 } from "../../../api/product";
 import { useState } from "react";
+import { FaPiggyBank } from "react-icons/fa";
 
 const ProductActions = ({ product, anchorEl, handleClose }) => {
   const router = useRouter();
@@ -52,18 +54,42 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
     handleClose();
   };
 
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct(product.id);
+      toast.success("Product deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product. Please try again.");
+    }
+  };
+
   return (
     <>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleHottestToggle}>
+          <IconButton>
+            <Switch checked={isHottestOffer} />
+          </IconButton>
           {product.is_hottest_offer ? "Deactivate" : "Activate"} Hottest Offer
         </MenuItem>
-        <MenuItem onClick={handleDiscountToggle}>Manage Discount</MenuItem>
+        <MenuItem onClick={handleDiscountToggle}>
+          <IconButton>
+            <FaPiggyBank />
+          </IconButton>
+          Manage Discount
+        </MenuItem>
         <MenuItem onClick={handleViewDetails}>
           <IconButton>
             <Edit />
           </IconButton>
           Edit Product
+        </MenuItem>
+        <MenuItem onClick={handleDeleteProduct}>
+          <IconButton>
+            <Delete />
+          </IconButton>
+          Delete Product
         </MenuItem>
       </Menu>
       <DiscountModal
