@@ -25,7 +25,7 @@ const DiscountSection = ({
             <input
               type="number"
               name="discount_price"
-              value={product.discount_price}
+              value={product.discount_price || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter discount price"
@@ -39,7 +39,7 @@ const DiscountSection = ({
             <input
               type="date"
               name="discount_start"
-              value={product.discount_start}
+              value={product.discount_start || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -52,7 +52,7 @@ const DiscountSection = ({
             <input
               type="date"
               name="discount_end"
-              value={product.discount_end}
+              value={product.discount_end || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />

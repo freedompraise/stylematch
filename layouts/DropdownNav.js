@@ -33,11 +33,11 @@ const DropdownNav = ({ closeDropdown }) => {
       <ul className="space-y-4 px-6">
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faHome} className="mr-2" />
-          Dashboard
+          <Link href="/comingSoon">Dashboard</Link>
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faUser} className="mr-2" />
-          Profile
+          <Link href="/comingSoon">Profile</Link>
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faProductHunt} className="mr-2" />
@@ -45,7 +45,7 @@ const DropdownNav = ({ closeDropdown }) => {
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-          Orders
+          <Link href="/comingSoon">Orders</Link>
         </li>
       </ul>
       <div className="flex justify-center p-4">
