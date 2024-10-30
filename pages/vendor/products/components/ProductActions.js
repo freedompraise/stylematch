@@ -15,13 +15,11 @@ import { FaPiggyBank } from "react-icons/fa";
 const ProductActions = ({ product, anchorEl, handleClose }) => {
   const router = useRouter();
   const [discountModalOpen, setDiscountModalOpen] = useState(false);
-  const [isHottestOffer, setIsHottestOffer] = useState(
-    product.is_hottest_offer || false
-  );
+  const [isHottestOffer, setIsHottestOffer] = useState(false);
 
   useEffect(() => {
     if (product) {
-      setIsHottestOffer(product.is_hottest_offer);
+      setIsHottestOffer(product.is_hottest_offer || false);
     }
   }, [product]);
 
@@ -41,7 +39,7 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
       setIsHottestOffer(!isHottestOffer);
       toast.success(
         `Product is now ${
-          !product.is_hottest_offer ? "activated" : "deactivated"
+          !isHottestOffer ? "activated" : "deactivated"
         } as hottest offer!`
       );
     } catch (error) {
@@ -80,7 +78,7 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
           <IconButton>
             <Switch checked={isHottestOffer} />
           </IconButton>
-          {product.is_hottest_offer ? "Deactivate" : "Activate"} Hottest Offer
+          {isHottestOffer ? "Deactivate" : "Activate"} Hottest Offer
         </MenuItem>
         <MenuItem onClick={handleDiscountToggle}>
           <IconButton>
