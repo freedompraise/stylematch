@@ -47,7 +47,7 @@ const ProductForm = ({
           <input
             type="text"
             name="name"
-            value={product.name}
+            value={product.name || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="Enter product name"
@@ -135,7 +135,7 @@ const ProductForm = ({
           <input
             type="number"
             name="price"
-            value={product.price}
+            value={product.price || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="Enter price"
@@ -150,7 +150,7 @@ const ProductForm = ({
           <input
             type="number"
             name="stock_quantity"
-            value={product.stock_quantity}
+            value={product.stock_quantity || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="Enter stock quantity"
