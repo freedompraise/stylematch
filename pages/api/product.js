@@ -83,24 +83,18 @@ const getPublicId = (url) => {
 };
 
 export const deleteProduct = async (productId) => {
-  try {
-    // Fetch the product from the database
-    const product = await db.products.findById(productId);
-    if (!product) {
-      throw new Error("Product not found");
-    }
+  console.log("Deleting product with ID:", productId);
+  const { data, error } = await supabase
+    .from("products")
+    .delete()
+    .eq("id", productId);
+  if (error) throw error;
+  return data;
+};
 
-    // Extract the public_id from the image URL
-    const imageUrl = product.image_url;
-    const publicId = getPublicId(imageUrl);
-
-    await deleteImageFromCloudinary(publicId);
-
-    await db.products.deleteById(productId);
-
-    return { message: "Product and associated image deleted successfully" };
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    throw error;
-  }
+export const deleteProductImage = async (imageUrl) => {
+  const publicId = getPublicId(imageUrl);
+  console.log("Deleting image with public ID:", publicId);
+  await deleteImageFromCloudinary(publicId);
+  return { message: "Image deleted successfully" };
 };

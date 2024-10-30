@@ -7,6 +7,7 @@ import {
   toggleHottestOffer,
   updateProductDiscount,
   deleteProduct,
+  deleteProductImage,
 } from "../../../api/product";
 import { useState } from "react";
 import { FaPiggyBank } from "react-icons/fa";
@@ -56,6 +57,7 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
 
   const handleDeleteProduct = async () => {
     try {
+      await deleteProductImage(product.image_url);
       await deleteProduct(product.id);
       toast.success("Product deleted successfully!");
     } catch (error) {
