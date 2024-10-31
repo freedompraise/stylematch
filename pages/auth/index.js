@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { signUpVendor } from "../../utils/supabaseAuth";
-import { toast } from "sonner";
 import { useAuth } from "context/useAuthContext";
 import { useRouter } from "next/router";
+import CustomToast from "@/CustomToast";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -24,11 +24,11 @@ const AuthPage = () => {
     );
 
     if (error) {
-      toast.error(error.message);
+      CustomToast.error(error.message);
       return;
     }
 
-    toast.success("Signup successful! Please confirm your email.");
+    CustomToast.success("Please check your email to confirm your account");
     router.push("/auth/confirm-email");
   };
 
@@ -36,7 +36,7 @@ const AuthPage = () => {
     const { vendor, error } = await saveSession(email, password);
 
     if (error) {
-      toast.error(error.message);
+      CustomToast.error(error.message);
       return;
     }
 

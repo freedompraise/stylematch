@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { Menu, MenuItem, IconButton, Typography, Switch } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { toast } from "sonner";
 import DiscountModal from "./DiscountModal";
 import {
   toggleHottestOffer,
@@ -11,6 +10,7 @@ import {
 } from "../../../api/product";
 import { useState, useEffect } from "react";
 import { FaPiggyBank } from "react-icons/fa";
+import CustomToast from "@/CustomToast";
 
 const ProductActions = ({ product, anchorEl, handleClose }) => {
   const router = useRouter();
@@ -37,14 +37,14 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
     try {
       await toggleHottestOffer(product.id, !isHottestOffer);
       setIsHottestOffer(!isHottestOffer);
-      toast.success(
+      CustomToast.success(
         `Product is now ${
           !isHottestOffer ? "activated" : "deactivated"
         } as hottest offer!`
       );
     } catch (error) {
       console.error("Failed to toggle hottest offer:", error);
-      toast.error("Failed to toggle hottest offer. Please try again.");
+      CustomToast.error("Failed to toggle hottest offer. Please try again.");
     } finally {
       handleClose();
     }
@@ -63,11 +63,11 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
     try {
       await deleteProductImage(product.image_url);
       await deleteProduct(product.id);
-      toast.success("Product deleted successfully!");
+      CustomToast.success("Product deleted successfully!");
       router.push("/vendor/products");
     } catch (error) {
       console.error("Failed to delete product:", error);
-      toast.error("Failed to delete product. Please try again.");
+      CustomToast.error("Failed to delete product. Please try again.");
     }
   };
 

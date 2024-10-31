@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ProductForm from "./components/ProductForm";
 import { getProductById, updateProduct } from "@/api/product";
-import { toast } from "sonner";
+import CustomToast from "@/CustomToast";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const ProductPage = () => {
           setIsDiscountChecked(!!data.discount_price);
         } catch (error) {
           console.error("Failed to fetch product:", error);
-          toast.error("Failed to load product details.");
+          CustomToast.error("Failed to load product details.");
         }
       };
       fetchProduct();
@@ -32,11 +32,11 @@ const ProductPage = () => {
     event.preventDefault();
     try {
       await updateProduct(id, product);
-      toast.success("Product updated successfully!");
+      CustomToast.success("Product updated successfully!");
       router.push("/products"); // Redirect to products page or another route after update
     } catch (error) {
       console.error("Failed to update product:", error);
-      toast.error("Failed to update product.");
+      CustomToast.error("Failed to update product.");
     }
   };
 

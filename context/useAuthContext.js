@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { toast } from "sonner";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import { loginVendor, logoutVendor } from "../utils/supabaseAuth";
+import CustomToast from "@/CustomToast";
 
 const AuthContext = createContext({
   vendor: null,
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }) => {
 
     setVendor(null);
     deleteCookie("vendor_session");
-    toast.success("Logged out successfully!");
+    CustomToast.success("Logged out successfully!");
     router.push("/auth");
   };
 
