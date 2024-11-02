@@ -81,10 +81,10 @@ const VendorPage = () => {
                     Add more details about your business to attract customers.
                   </p>
                   <Link
-                    href="/vendor/settings"
+                    href="/vendor/profile"
                     className="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
                   >
-                    Go to Settings
+                    Go to Profile Settings
                   </Link>
                 </div>
 
