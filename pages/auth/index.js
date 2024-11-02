@@ -41,7 +41,7 @@ const AuthPage = () => {
     }
 
     if (vendor) {
-      router.push(`/vendor/${vendor.company_name}`);
+      router.push(`/vendor/dashboard`);
     }
   };
 

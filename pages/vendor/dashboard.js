@@ -14,7 +14,6 @@ const VendorPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { company_name } = router.query;
 
   const { vendor, isLoading: authLoading } = useAuth();
 
@@ -25,20 +24,15 @@ const VendorPage = () => {
         return;
       }
 
-      if (vendor.company_name !== company_name) {
-        router.push("/auth");
-        return;
-      }
-
       const { products: vendorProducts } = await fetchProducts(vendor.user_id);
       setProducts(vendorProducts || []);
       setIsLoading(false);
     };
 
-    if (!authLoading && company_name) {
+    if (!authLoading && vendor) {
       fetchData();
     }
-  }, [company_name, vendor, authLoading, router]);
+  }, [vendor, authLoading, router]);
 
   if (authLoading || isLoading) {
     return <div>Loading...</div>;
