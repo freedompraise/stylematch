@@ -1,8 +1,11 @@
-// pages/product/[id].js
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ProductForm from "./components/ProductForm";
-import { getProductById, updateProduct } from "@/api/product";
+import {
+  getProductById,
+  updateProduct,
+  replaceProductImage,
+} from "@/api/product";
 import CustomToast from "@/CustomToast";
 
 const ProductPage = () => {
@@ -11,6 +14,7 @@ const ProductPage = () => {
 
   const [product, setProduct] = useState(null);
   const [isDiscountChecked, setIsDiscountChecked] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -30,18 +34,30 @@ const ProductPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let imageUrl = product.image_url;
+
     try {
-      await updateProduct(id, product);
+      if (!product.name || !product.price) {
+        CustomToast.error("Please fill in all required fields.");
+        return;
+      }
+
+      if (selectedImage) {
+        imageUrl = await replaceProductImage(product.image_url, selectedImage);
+        setProduct((prev) => ({ ...prev, image_url: imageUrl }));
+      }
+
+      await updateProduct(id, { ...product, image_url: imageUrl });
       CustomToast.success("Product updated successfully!");
-      router.push("/products"); // Redirect to products page or another route after update
+      router.push("products");
     } catch (error) {
       console.error("Failed to update product:", error);
       CustomToast.error("Failed to update product.");
     }
   };
 
-  const handleImageSelect = (imageUrl) => {
-    setProduct((prev) => ({ ...prev, image_url: imageUrl }));
+  const handleImageSelect = (image) => {
+    setSelectedImage(image);
   };
 
   if (!product) return <p>Loading...</p>;
