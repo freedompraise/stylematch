@@ -49,7 +49,7 @@ const ProductPage = () => {
 
       await updateProduct(id, { ...product, image_url: imageUrl });
       CustomToast.success("Product updated successfully!");
-      router.push("products");
+      router.push("/vendor/products");
     } catch (error) {
       console.error("Failed to update product:", error);
       CustomToast.error("Failed to update product.");
