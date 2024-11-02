@@ -23,7 +23,11 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initialize = async () => {
       setIsLoading(true);
-      if (router.pathname !== "/auth") {
+      if (
+        router.pathname !== "/auth" &&
+        router.pathname !== "" &&
+        router.pathname !== "/"
+      ) {
         if (hasCookie("vendor_session")) {
           const sessionData = JSON.parse(getCookie("vendor_session"));
 
