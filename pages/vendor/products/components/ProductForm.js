@@ -172,7 +172,10 @@ const ProductForm = ({
         <label className="block text-sm font-semibold mb-1">
           Product Image
         </label>
-        <ImageUploader onImageSelect={handleImageSelect} />
+        <ImageUploader
+          onImageSelect={handleImageSelect}
+          existingImageUrl={product.image_url || ""}
+        />
       </div>
 
       <div className="flex justify-end">
