@@ -7,7 +7,7 @@ import {
   updateProductDiscount,
   deleteProduct,
   deleteProductImage,
-} from "../../../api/product";
+} from "@/api/product";
 import { useState, useEffect } from "react";
 import { FaPiggyBank } from "react-icons/fa";
 import CustomToast from "@/CustomToast";

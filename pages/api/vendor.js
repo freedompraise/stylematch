@@ -1,5 +1,5 @@
 import { getPublicId } from "@/utils";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "@/supabaseClient";
 import { deleteImageFromCloudinary } from "@/cloudinary";
 
 export const fetchVendorData = async (company_name) => {
