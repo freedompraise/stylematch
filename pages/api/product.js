@@ -96,7 +96,11 @@ export const deleteProductImage = async (imageUrl) => {
 export const replaceProductImage = async (currentImageUrl, newImage) => {
   if (currentImageUrl) {
     const publicId = getPublicId(currentImageUrl);
-    await deleteImageFromCloudinary(publicId);
+    try {
+      await deleteImageFromCloudinary(publicId);
+    } catch (error) {
+      throw new Error("Failed to delete the current image.");
+    }
   }
   const newImageUrl = await uploadImageToCloudinary(newImage);
   return newImageUrl;

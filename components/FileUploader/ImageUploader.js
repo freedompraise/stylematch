@@ -29,7 +29,7 @@ const ImageUploader = ({ onImageSelect, existingImageUrl }) => {
 
   const handleRemoveImage = () => {
     setImagePreview(null);
-    onImageSelect(null); // Notify parent that the image has been removed
+    onImageSelect(null);
   };
 
   return (
