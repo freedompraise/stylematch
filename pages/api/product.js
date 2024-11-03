@@ -1,5 +1,9 @@
-import { supabase } from "../../utils/supabaseClient";
-import { deleteImageFromCloudinary } from "@/cloudinary";
+import { supabase } from "@/supabaseClient";
+import {
+  deleteImageFromCloudinary,
+  uploadImageToCloudinary,
+} from "@/cloudinary";
+import { getPublicId } from "@/utils";
 
 export const categories = [
   "Clothing",
@@ -74,14 +78,6 @@ export const getProductById = async (id) => {
   return data[0];
 };
 
-// Hellper function to extract public_id from the image url
-const getPublicId = (url) => {
-  const parts = url.split("/");
-  const publicIdWithExtension = parts.slice(-2).join("/"); // e.g., "my-folder/image_name.jpg"
-  const publicId = publicIdWithExtension.replace(/\.[^/.]+$/, ""); // Removes the extension
-  return publicId;
-};
-
 export const deleteProduct = async (productId) => {
   const { data, error } = await supabase
     .from("products")
@@ -95,4 +91,13 @@ export const deleteProductImage = async (imageUrl) => {
   const publicId = getPublicId(imageUrl);
   await deleteImageFromCloudinary(publicId);
   return { message: "Image deleted successfully" };
+};
+
+export const replaceProductImage = async (currentImageUrl, newImage) => {
+  if (currentImageUrl) {
+    const publicId = getPublicId(currentImageUrl);
+    await deleteImageFromCloudinary(publicId);
+  }
+  const newImageUrl = await uploadImageToCloudinary(newImage);
+  return newImageUrl;
 };

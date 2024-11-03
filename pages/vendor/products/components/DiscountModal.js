@@ -7,13 +7,14 @@ import {
   Button,
 } from "@mui/material";
 import { useState } from "react";
+import CustomToast from "@/CustomToast";
 
 const DiscountModal = ({ open, onClose, productId, onDiscountChange }) => {
   const [discount, setDiscount] = useState("");
 
   const handleApplyDiscount = async () => {
     await onDiscountChange(productId, discount);
-    toast.success("Discount updated successfully!");
+    CustomToast.success("Discount updated successfully!");
     onClose();
   };
 

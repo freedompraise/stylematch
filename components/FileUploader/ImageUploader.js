@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const ImageUploader = ({ onImageSelect }) => {
-  const [imagePreview, setImagePreview] = useState(null);
+const ImageUploader = ({ onImageSelect, existingImageUrl }) => {
+  const [imagePreview, setImagePreview] = useState(existingImageUrl || null);
   const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+  useEffect(() => {
+    // Set preview to existing image if provided
+    if (existingImageUrl) {
+      setImagePreview(existingImageUrl);
+    }
+  }, [existingImageUrl]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -20,17 +27,33 @@ const ImageUploader = ({ onImageSelect }) => {
     onImageSelect(file);
   };
 
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    onImageSelect(null); // Notify parent that the image has been removed
+  };
+
   return (
     <div>
-      <input type="file" onChange={handleImageChange} required />
-      {imagePreview && (
-        <Image
-          src={imagePreview}
-          width={80}
-          height={80}
-          alt="Preview"
-          className="mt-2 h-20 w-20 object-cover"
-        />
+      <input type="file" onChange={handleImageChange} />
+      {imagePreview ? (
+        <div className="mt-2 relative">
+          <Image
+            src={imagePreview}
+            width={80}
+            height={80}
+            alt="Preview"
+            className="h-20 w-20 object-cover"
+          />
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            className="absolute top-0 right-0 p-1 bg-red-500 text-white text-xs rounded-full"
+          >
+            X
+          </button>
+        </div>
+      ) : (
+        <p className="mt-2 text-sm text-gray-500">No image selected</p>
       )}
     </div>
   );

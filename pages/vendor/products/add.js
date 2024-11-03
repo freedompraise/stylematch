@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { createProduct } from "@/api/product";
 import { useAuth } from "context/useAuthContext";
 import { uploadImageToCloudinary } from "@/cloudinary";
 import ProductForm from "./components/ProductForm";
+import CustomToast from "@/CustomToast";
 
 const AddProduct = () => {
   const { vendor } = useAuth();
@@ -42,7 +42,7 @@ const AddProduct = () => {
 
     if (!product.price || isNaN(product.price)) {
       isValid = false;
-      toast.error("Price must be a number");
+      CustomToast.error("Price must be a number");
     }
 
     if (isValid) {
@@ -51,7 +51,7 @@ const AddProduct = () => {
         product.image_url = imageUrl;
       }
       await createProduct(product);
-      toast.success("Product added successfully!");
+      CustomToast.success("Product added successfully!");
       router.push("/vendor/products");
     }
   };

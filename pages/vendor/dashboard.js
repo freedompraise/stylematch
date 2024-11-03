@@ -14,7 +14,6 @@ const VendorPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { company_name } = router.query;
 
   const { vendor, isLoading: authLoading } = useAuth();
 
@@ -25,20 +24,15 @@ const VendorPage = () => {
         return;
       }
 
-      if (vendor.company_name !== company_name) {
-        router.push("/auth");
-        return;
-      }
-
       const { products: vendorProducts } = await fetchProducts(vendor.user_id);
       setProducts(vendorProducts || []);
       setIsLoading(false);
     };
 
-    if (!authLoading && company_name) {
+    if (!authLoading && vendor) {
       fetchData();
     }
-  }, [company_name, vendor, authLoading, router]);
+  }, [vendor, authLoading, router]);
 
   if (authLoading || isLoading) {
     return <div>Loading...</div>;
@@ -87,10 +81,10 @@ const VendorPage = () => {
                     Add more details about your business to attract customers.
                   </p>
                   <Link
-                    href="/vendor/settings"
+                    href="/vendor/profile"
                     className="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
                   >
-                    Go to Settings
+                    Go to Profile Settings
                   </Link>
                 </div>
 
