@@ -5,19 +5,28 @@ import {
   faShoppingCart,
   faTimes,
   faSignOut,
+  faLink,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { faProductHunt } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
 import { useAuth } from "context/useAuthContext";
+import CustomToast from "@/CustomToast";
 
 const DropdownNav = ({ closeDropdown }) => {
-  const { removeSession } = useAuth();
+  const { vendor, removeSession } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
     await removeSession();
     router.push("/auth");
+  };
+
+  const copyVendorLink = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/buy/${vendor?.company_name}`
+    );
+    CustomToast.success("Vendor Link copied to clipboard");
   };
 
   return (
@@ -46,6 +55,13 @@ const DropdownNav = ({ closeDropdown }) => {
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
           <Link href="/comingSoon">Orders</Link>
+        </li>
+        <li
+          onClick={copyVendorLink}
+          className="hover:bg-blue-600 hover:text-white p-2 cursor-pointer"
+        >
+          <FontAwesomeIcon icon={faLink} className="mr-2" />
+          Copy Link
         </li>
       </ul>
       <div className="flex justify-center p-4">
