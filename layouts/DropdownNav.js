@@ -12,15 +12,28 @@ import { faProductHunt } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
 import { useAuth } from "context/useAuthContext";
 import CustomToast from "@/CustomToast";
+import { useRef, useEffect } from "react";
 
 const DropdownNav = ({ closeDropdown }) => {
   const { vendor, removeSession } = useAuth();
   const router = useRouter();
+  const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
     await removeSession();
     router.push("/auth");
   };
+
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      closeDropdown();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const copyVendorLink = () => {
     navigator.clipboard.writeText(
@@ -30,7 +43,10 @@ const DropdownNav = ({ closeDropdown }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 h-full lg:w-80 w-64 bg-white text-black z-50">
+    <div
+      ref={dropdownRef}
+      className="fixed top-0 left-0 h-full lg:w-80 w-64 bg-white text-black z-50"
+    >
       <div className="flex justify-end p-4">
         <button onClick={closeDropdown}>
           <FontAwesomeIcon
