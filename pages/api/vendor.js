@@ -44,7 +44,11 @@ export const updateVendorProfile = async (vendorData) => {
 export const replaceBannerImage = async (oldImageUrl, newImage) => {
   if (oldImageUrl) {
     const publicId = getPublicId(oldImageUrl);
-    await deleteImageFromCloudinary(publicId);
+    try {
+      await deleteImageFromCloudinary(publicId);
+    } catch (error) {
+      throw new Error("Failed to delete the current image.");
+    }
   }
 
   const newImageUrl = await uploadImageToCloudinary(newImage);
