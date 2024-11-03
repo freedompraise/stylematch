@@ -1,6 +1,7 @@
 import { categories, colors, sizes } from "@/api/product";
 import DiscountSection from "./DiscountSection";
 import ImageUploader from "@/FileUploader/ImageUploader";
+import LoadingButton from "@/LoadingButton";
 
 const ProductForm = ({
   product = {},
@@ -36,10 +37,7 @@ const ProductForm = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="items-center lg:p-12 sm:p-4 justify-between mb-4"
-    >
+    <form className="items-center lg:p-12 sm:p-4 justify-between mb-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         {/* Product Name */}
         <div>
@@ -179,12 +177,7 @@ const ProductForm = ({
       </div>
 
       <div className="flex justify-end">
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-700"
-        >
-          {product.id ? "Update Product" : "Add Product"}
-        </button>
+        <LoadingButton onClick={handleSubmit} label="Save Product" />
       </div>
     </form>
   );

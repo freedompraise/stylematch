@@ -2,13 +2,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import ImageUploader from "@/FileUploader/ImageUploader";
-import {
-  updateVendorProfile,
-  replaceBannerImage,
-  fetchVendorData,
-} from "@/api/vendor";
+import { updateVendorProfile, replaceBannerImage } from "@/api/vendor";
 import CustomToast from "@/CustomToast";
 import { useAuth } from "context/useAuthContext";
+import LoadingButton from "@/LoadingButton";
 
 const VendorProfileSettings = () => {
   const router = useRouter();
@@ -126,9 +123,7 @@ const VendorProfileSettings = () => {
           existingImageUrl={vendorData.banner_image_url || ""}
         />
       </Box>
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Save Changes
-      </Button>
+      <LoadingButton onClick={handleSubmit} label="Save Profile" />
     </Box>
   );
 };

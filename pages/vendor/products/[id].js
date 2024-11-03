@@ -32,8 +32,7 @@ const ProductPage = () => {
     }
   }, [id]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     let imageUrl = product.image_url;
 
     try {
