@@ -1,6 +1,9 @@
 import { getPublicId } from "@/utils";
 import { supabase } from "@/supabaseClient";
-import { deleteImageFromCloudinary } from "@/cloudinary";
+import {
+  deleteImageFromCloudinary,
+  uploadImageToCloudinary,
+} from "@/cloudinary";
 
 export const fetchVendorData = async (company_name) => {
   const { data: vendorData, error } = await supabase
@@ -18,11 +21,14 @@ export const fetchVendorData = async (company_name) => {
 
 export const updateVendorProfile = async (vendorData) => {
   try {
-    const { id, ...updateData } = vendorData;
+    if (!vendorData.user_id) {
+      throw new Error("User ID is missing. Ensure user_id is properly set.");
+    }
+
     const { data, error } = await supabase
       .from("vendors")
-      .update(updateData)
-      .eq("id", id);
+      .update(vendorData)
+      .eq("user_id", vendorData.user_id);
 
     if (error) {
       throw new Error(error.message);
@@ -35,8 +41,12 @@ export const updateVendorProfile = async (vendorData) => {
   }
 };
 
-export const deleteBannerImage = async (imageUrl) => {
-  const publicId = getPublicId(imageUrl);
-  await deleteImageFromCloudinary(publicId);
-  return { message: "Image changed successfully" };
+export const replaceBannerImage = async (oldImageUrl, newImage) => {
+  if (oldImageUrl) {
+    const publicId = getPublicId(oldImageUrl);
+    await deleteImageFromCloudinary(publicId);
+  }
+
+  const newImageUrl = await uploadImageToCloudinary(newImage);
+  return newImageUrl;
 };

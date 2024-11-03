@@ -2,26 +2,34 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import ImageUploader from "@/FileUploader/ImageUploader";
-import { updateVendorProfile, deleteBannerImage } from "../../api/vendor";
+import {
+  updateVendorProfile,
+  replaceBannerImage,
+  fetchVendorData,
+} from "@/api/vendor";
 import CustomToast from "@/CustomToast";
 import { useAuth } from "context/useAuthContext";
 
 const VendorProfileSettings = () => {
   const router = useRouter();
   const { vendor } = useAuth();
+  const [selectedImage, setSelectedImage] = useState(null);
   const [vendorData, setVendorData] = useState({
     company_name: "",
     phone: "",
     banner_image_url: "",
     bio: "",
     name: "",
+    user_id: "",
   });
-  const [originalBannerImageUrl, setOriginalBannerImageUrl] = useState("");
 
   useEffect(() => {
     if (vendor) {
-      setVendorData(vendor);
-      setOriginalBannerImageUrl(vendor.banner_image_url);
+      setVendorData({
+        ...vendor,
+        user_id: vendor.user_id || vendor.id,
+      });
+      setSelectedImage(null);
     }
   }, [vendor]);
 
@@ -33,30 +41,36 @@ const VendorProfileSettings = () => {
     }));
   };
 
-  const handleImageUpload = async (newImageUrl) => {
-    if (newImageUrl !== vendorData.banner_image_url) {
-      if (originalBannerImageUrl) {
-        try {
-          await deleteBannerImage(originalBannerImageUrl);
-        } catch (error) {
-          console.error("Failed to delete old image:", error);
-          CustomToast.error(
-            "Failed to delete old banner image. Please try again."
-          );
-        }
-      }
-
-      setVendorData((prevData) => ({
-        ...prevData,
-        banner_image_url: newImageUrl,
-      }));
-      setOriginalBannerImageUrl(newImageUrl);
-    }
+  const handleImageSelect = (image) => {
+    setSelectedImage(image);
   };
 
   const handleSubmit = async () => {
     try {
-      await updateVendorProfile(vendorData);
+      let updatedBannerImageUrl = vendorData.banner_image_url;
+
+      if (selectedImage) {
+        updatedBannerImageUrl = await replaceBannerImage(
+          vendorData.banner_image_url,
+          selectedImage
+        );
+
+        if (!updatedBannerImageUrl) {
+          throw new Error("Failed to upload the new image.");
+        }
+
+        setVendorData((prevData) => ({
+          ...prevData,
+          banner_image_url: updatedBannerImageUrl,
+        }));
+      }
+
+      const updatedVendorData = {
+        ...vendorData,
+        banner_image_url: updatedBannerImageUrl,
+      };
+
+      await updateVendorProfile(updatedVendorData);
       CustomToast.success("Profile updated successfully!");
       router.push("/vendor/dashboard");
     } catch (error) {
@@ -108,8 +122,8 @@ const VendorProfileSettings = () => {
       <Box sx={{ marginTop: 2, marginBottom: 2 }}>
         <Typography variant="subtitle1">Upload Banner Image</Typography>
         <ImageUploader
-          existingImageUrl={vendorData.banner_image_url}
-          onUploadSuccess={handleImageUpload}
+          onImageSelect={handleImageSelect}
+          existingImageUrl={vendorData.banner_image_url || ""}
         />
       </Box>
       <Button variant="contained" color="primary" onClick={handleSubmit}>
