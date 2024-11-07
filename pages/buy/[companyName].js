@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import HeroSection from "./components/HeroSection";
 import ProductCard from "./components/ProductCard";
 import ProductDetailModal from "./components/ProductDetailModal";
+import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
 import { getVendorDetails, getVendorProducts } from "@/api/vendor";
 
@@ -69,24 +70,17 @@ const VendorPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center min-h-screen py-8 text-red-500">
-        Error: {error}
-      </div>
-    );
-  }
-
   return (
     <>
       {vendor ? (
-        <>
-          <HeroSection
-            bannerImage={vendor.bannerImage}
-            vendorName={vendor.name}
-            bio={vendor.bio}
-          />
-          <section className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+        <section className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+          <>
+            <HeroSection
+              bannerImage={vendor.bannerImage}
+              vendorName={vendor.name}
+              bio={vendor.bio}
+            />
+
             {products.length > 0 ? (
               products.map((product) => (
                 <ProductCard
@@ -100,17 +94,18 @@ const VendorPage = () => {
                 No products available
               </div>
             )}
-          </section>
-          <ChatPopup vendorPhoneNumber={vendor.phoneNumber} />
-          {selectedProduct && (
-            <ProductDetailModal
-              product={selectedProduct}
-              onClose={() => setSelectedProduct(null)}
-            />
-          )}
-        </>
+
+            <ChatPopup vendorPhoneNumber={vendor.phoneNumber} />
+            {selectedProduct && (
+              <ProductDetailModal
+                product={selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+              />
+            )}
+          </>
+        </section>
       ) : (
-        <div className="text-center h-64 mt-8">Vendor not found</div>
+        <ErrorDisplay message={error} />
       )}
     </>
   );
