@@ -73,26 +73,26 @@ const VendorPage = () => {
   return (
     <>
       {vendor ? (
-        <section className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+        <section className="container mx-auto my-8">
           <>
             <HeroSection
-              bannerImage={vendor.bannerImage}
+              bannerImage={vendor.banner_image_url}
               vendorName={vendor.name}
               bio={vendor.bio}
             />
 
             {products.length > 0 ? (
-              products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onViewDetails={setSelectedProduct}
-                />
-              ))
-            ) : (
-              <div className="text-center col-span-full py-8">
-                No products available
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onViewDetails={setSelectedProduct}
+                  />
+                ))}
               </div>
+            ) : (
+              <p>This vendor has No products available</p>
             )}
 
             <ChatPopup vendorPhoneNumber={vendor.phoneNumber} />
