@@ -1,6 +1,4 @@
-import { useState } from "react";
-
-const ProductDetailModal = ({ product, onClose }) => {
+const ProductDetailModal = ({ product = {}, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg max-w-lg w-full">
@@ -14,10 +12,7 @@ const ProductDetailModal = ({ product, onClose }) => {
         <p className="text-gray-800 mb-2">Price: NGN {product.price}</p>
         <button
           onClick={() =>
-            window.open(
-              `https://wa.me/234${product.vendorPhoneNumber}`,
-              "_blank"
-            )
+            window.open(`https://wa.me/${product.vendor.phone}`, "_blank")
           }
           className="bg-green-500 text-white mr-4 px-4 py-2 rounded-md hover:bg-green-600"
         >

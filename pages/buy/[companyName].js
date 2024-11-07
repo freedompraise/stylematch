@@ -76,9 +76,11 @@ const VendorPage = () => {
         <section className="container mx-auto my-8">
           <>
             <HeroSection
-              bannerImage={vendor.banner_image_url}
-              vendorName={vendor.name}
-              bio={vendor.bio}
+              bannerImage={vendor.banner_image_url || ""}
+              vendorName={
+                vendor.name || vendor.company_name || "Fashion Vendor"
+              }
+              bio={vendor.bio || "This vendor has no bio yet."}
             />
 
             {products.length > 0 ? (
