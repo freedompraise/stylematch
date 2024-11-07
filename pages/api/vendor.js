@@ -5,11 +5,12 @@ import {
   uploadImageToCloudinary,
 } from "@/cloudinary";
 
-export const fetchVendorData = async (company_name) => {
+export const getVendorDetails = async (company_name) => {
+  console.log("company_name", company_name);
   const { data: vendorData, error } = await supabase
     .from("vendors")
     .select("*")
-    .eq("company_name", company_name)
+    .ilike("company_name", `%${company_name.trim().toLowerCase()}%`)
     .single();
 
   if (error || !vendorData) {
@@ -17,6 +18,20 @@ export const fetchVendorData = async (company_name) => {
     return { vendor: null, error };
   }
   return { vendor: vendorData, error: null };
+};
+
+export const getVendorProducts = async (vendorId) => {
+  const { data: productsData, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("vendor_id", vendorId);
+
+  if (error) {
+    console.error("Error fetching products:", error.message);
+    return { products: [], error };
+  }
+
+  return { products: productsData, error: null };
 };
 
 export const updateVendorProfile = async (vendorData) => {

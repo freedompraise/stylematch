@@ -4,8 +4,9 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
 import "tailwindcss/tailwind.css";
 import Head from "next/head";
-import VendorLayout from "../layouts/VendorLayout";
-import LandingPageLayout from "../layouts/LandingPageLayout";
+import VendorLayout from "@/VendorLayout";
+import LandingPageLayout from "@/LandingPageLayout";
+import BuyerLayout from "@/BuyerLayout";
 import { useRouter } from "next/router";
 import { Toaster } from "sonner";
 import AuthProvider from "context/useAuthContext";
@@ -13,6 +14,7 @@ import AuthProvider from "context/useAuthContext";
 function App({ Component, pageProps }) {
   const router = useRouter();
   const isVendorPage = router.pathname.startsWith("/vendor");
+  const isBuyerPage = router.pathname.startsWith("/buy");
   const isLandingPage = router.pathname === "/";
 
   return (
@@ -31,6 +33,10 @@ function App({ Component, pageProps }) {
           <VendorLayout>
             <Component {...pageProps} />
           </VendorLayout>
+        ) : isBuyerPage ? (
+          <BuyerLayout>
+            <Component {...pageProps} />
+          </BuyerLayout>
         ) : isLandingPage ? (
           <LandingPageLayout>
             <Component {...pageProps} />
