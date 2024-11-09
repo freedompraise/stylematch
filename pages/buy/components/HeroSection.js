@@ -5,8 +5,9 @@ const HeroSection = ({ bannerImage, vendorName, bio }) => {
         <img
           src={bannerImage}
           alt={`${vendorName} banner`}
-          className="w-full h-48 object-cover mb-4"
+          className="w-32 h-32 object-cover rounded-full border-2 border-gray-300"
         />
+
         <h1 className="text-3xl font-bold text-indigo-600">{vendorName}</h1>
         <p className="text-gray-700 mt-2">{bio}</p>
         <div className="flex space-x-4 mt-4">

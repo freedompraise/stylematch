@@ -73,7 +73,7 @@ const VendorPage = () => {
   return (
     <>
       {vendor ? (
-        <section className="container mx-auto my-8">
+        <section className="container mx-auto my-8 min-h-screen">
           <>
             <HeroSection
               bannerImage={vendor.banner_image_url || ""}
@@ -94,7 +94,10 @@ const VendorPage = () => {
                 ))}
               </div>
             ) : (
-              <p>This vendor has No products available</p>
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <p className="text-2xl font-semibold">Oooops.....</p>
+                <p className="text-lg">This vendor has no products available</p>
+              </div>
             )}
 
             <ChatPopup vendorPhoneNumber={vendor.phoneNumber} />

@@ -20,7 +20,7 @@ const ChatPopup = ({ vendorPhoneNumber }) => {
               onClick={() =>
                 window.open(`https://wa.me/234${vendorPhoneNumber}`, "_blank")
               }
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full mb-2"
+              className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 w-full mb-2"
             >
               Contact Seller
             </button>

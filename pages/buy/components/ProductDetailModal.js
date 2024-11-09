@@ -14,7 +14,7 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
           onClick={() =>
             window.open(`https://wa.me/${product.vendor.phone}`, "_blank")
           }
-          className="bg-green-500 text-white mr-4 px-4 py-2 rounded-md hover:bg-green-600"
+          className="bg-white border border-green-500 text-green-500 px-4 py-2 rounded-md hover:bg-indigo-500 hover:text-white mr-2"
         >
           Order Now
         </button>
