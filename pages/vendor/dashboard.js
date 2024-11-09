@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { useAuth } from "context/useAuthContext";
 import { fetchProducts } from "../api/product";
 import Link from "next/link";
@@ -13,17 +12,11 @@ import {
 const VendorPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
   const { vendor, isLoading: authLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!vendor) {
-        router.push("/auth");
-        return;
-      }
-
       const { products: vendorProducts } = await fetchProducts(vendor.user_id);
       setProducts(vendorProducts || []);
       setIsLoading(false);
@@ -32,7 +25,7 @@ const VendorPage = () => {
     if (!authLoading && vendor) {
       fetchData();
     }
-  }, [vendor, authLoading, router]);
+  }, [vendor, authLoading]);
 
   if (authLoading || isLoading) {
     return <div>Loading...</div>;
@@ -96,12 +89,12 @@ const VendorPage = () => {
                   <p className="text-gray-600 mb-4">
                     Start by adding products to your catalog.
                   </p>
-                  <button
-                    onClick={() => router.push("/vendor/products/add")}
+                  <Link
+                    href="/vendor/products/add"
                     className="inline-block bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
                   >
                     Add Product
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="bg-white shadow-lg p-6 rounded-lg transform hover:scale-105 transition duration-200">
@@ -113,7 +106,7 @@ const VendorPage = () => {
                     Personalize your store to match your brand.
                   </p>
                   <Link
-                    href="/vendor/customize"
+                    href="/comingsoon"
                     className="inline-block bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600"
                   >
                     Customize Store
@@ -127,7 +120,7 @@ const VendorPage = () => {
                     Check out our resources to help you get started.
                   </p>
                   <Link
-                    href="/vendor/help"
+                    href="/comingsoon"
                     className="inline-block bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
                   >
                     Get Help

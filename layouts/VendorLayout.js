@@ -1,7 +1,7 @@
 import { useState } from "react";
-import TopNavbar from "./TopNavbar";
-import DropdownNav from "./DropdownNav";
-import Footer from "./Footer";
+import TopNavbar from "../components/Vendor/TopNavbar";
+import DropdownNav from "../components/Vendor/DropdownNav";
+import Footer from "../components/Vendor/Footer";
 
 const VendorLayout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
