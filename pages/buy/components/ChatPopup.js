@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { FaCommentDots } from "react-icons/fa";
+import CustomToast from "@/CustomToast";
 
 const ChatPopup = ({ vendorPhoneNumber }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const adminHelpMessage =
+    "Hello, StyleMatch Admin, I need help with something.";
+  const adminPhone = "2349074577147";
 
   return (
     <>
@@ -18,15 +22,18 @@ const ChatPopup = ({ vendorPhoneNumber }) => {
             <h2 className="text-lg font-bold mb-4">Contact Options</h2>
             <button
               onClick={() =>
-                window.open(`https://wa.me/234${vendorPhoneNumber}`, "_blank")
+                window.open(`https://wa.me/${vendorPhoneNumber}`, "_blank")
               }
               className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 w-full mb-2"
             >
-              Contact Seller
+              Contact Vendor
             </button>
             <button
               onClick={() =>
-                window.open("https://wa.me/2349074577147", "_blank")
+                window.open(
+                  `https://wa.me/${adminPhone}?text=${adminHelpMessage}`,
+                  "_blank"
+                )
               }
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"
             >

@@ -94,7 +94,7 @@ const VendorPage = () => {
               </div>
             )}
 
-            <ChatPopup vendorPhoneNumber={vendor.phoneNumber} />
+            <ChatPopup vendorPhoneNumber={vendor.phone} />
             {selectedProduct && (
               <ProductDetailModal
                 product={selectedProduct}
