@@ -8,6 +8,14 @@ const ChatPopup = ({ vendorPhoneNumber }) => {
     "Hello, StyleMatch Admin, I need help with something.";
   const adminPhone = "2349074577147";
 
+  const handleVendorChat = () => {
+    if (!vendorPhoneNumber) {
+      CustomToast.error("Vendor phone number is not available");
+      return;
+    }
+    window.open(`https://wa.me/${vendorPhoneNumber}`, "_blank");
+  };
+
   return (
     <>
       <button
@@ -21,9 +29,7 @@ const ChatPopup = ({ vendorPhoneNumber }) => {
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
             <h2 className="text-lg font-bold mb-4">Contact Options</h2>
             <button
-              onClick={() =>
-                window.open(`https://wa.me/${vendorPhoneNumber}`, "_blank")
-              }
+              onClick={handleVendorChat}
               className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 w-full mb-2"
             >
               Contact Vendor
