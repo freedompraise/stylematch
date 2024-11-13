@@ -73,15 +73,9 @@ const VendorPage = () => {
   return (
     <>
       {vendor ? (
-        <section className="container mx-auto my-8 min-h-screen">
+        <section className="container mx-auto lg:px-16 sm:px-4 my-8 min-h-screen">
           <>
-            <HeroSection
-              bannerImage={vendor.banner_image_url || ""}
-              vendorName={
-                vendor.name || vendor.company_name || "Fashion Vendor"
-              }
-              bio={vendor.bio || "This vendor has no bio yet."}
-            />
+            <HeroSection vendor={vendor} />
 
             {products.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">

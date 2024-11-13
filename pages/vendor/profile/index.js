@@ -18,6 +18,9 @@ const VendorProfileSettings = () => {
     bio: "",
     name: "",
     user_id: "",
+    instagram_url: "",
+    facebook_url: "",
+    wabusiness_url: "",
   });
 
   useEffect(() => {
@@ -114,6 +117,31 @@ const VendorProfileSettings = () => {
         label="Bio"
         name="bio"
         value={vendorData.bio}
+        onChange={handleInputChange}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Instagram Link"
+        name="instagram_url"
+        value={vendorData.instagram_url}
+        onChange={handleInputChange}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Facebook Link"
+        name="facebook_url"
+        value={vendorData.facebook_url}
+        onChange={handleInputChange}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="WhatsApp Business URL"
+        name="wabusiness_url"
+        placeholder="https://wa.me/1234567890"
+        value={vendorData.wabusiness_url}
         onChange={handleInputChange}
       />
       <Box sx={{ marginTop: 2, marginBottom: 2 }}>
