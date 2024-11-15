@@ -7,9 +7,10 @@ import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
 import { getVendorDetails, getVendorProducts } from "@/api/vendor";
 
-const VendorPage = () => {
+const VendorPage = (searchQuery) => {
   const router = useRouter();
   const { companyName } = router.query;
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendor, setVendor] = useState(null);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -54,6 +55,20 @@ const VendorPage = () => {
 
     return () => clearTimeout(delayedMessageTimer);
   }, [companyName]);
+
+  useEffect(() => {
+    if (typeof searchQuery === "string" && searchQuery) {
+      setFilteredProducts(
+        products.filter(
+          (product) =>
+            product.name &&
+            product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchQuery, products]);
 
   if (loading) {
     return (

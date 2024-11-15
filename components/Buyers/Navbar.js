@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { useState } from "react";
-import { FaShoppingCart, FaSearch } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import CartSidebar from "./CartSidebar";
+import Searchbar from "./Searchbar";
 
-const Navbar = ({ logo, cartItems }) => {
+const Navbar = ({ logo, cartItems, onSearch }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const toggleCart = () => {
@@ -20,18 +21,7 @@ const Navbar = ({ logo, cartItems }) => {
             </span>
           </Link>
           <div className="flex items-center space-x-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="border border-gray-300 rounded-md px-3 py-1 sm:hidden block"
-              />
-              <FaSearch
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400
-              sm:w-4
-              "
-              />
-            </div>
+            <Searchbar onSearch={onSearch} />
 
             <span onClick={toggleCart} className="relative cursor-pointer">
               <FaShoppingCart size={24} className="text-indigo-500" />
