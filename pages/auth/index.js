@@ -3,6 +3,7 @@ import { signUpVendor } from "../../utils/supabaseAuth";
 import { useAuth } from "context/useAuthContext";
 import { useRouter } from "next/router";
 import CustomToast from "@/CustomToast";
+import LoadingButton from "@/LoadingButton";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -92,13 +93,11 @@ const AuthPage = () => {
           </>
         )}
 
-        <button
-          className="w-full bg-blue-500 text-white py-3 rounded-md font-semibold hover:bg-blue-600 transition-colors"
+        <LoadingButton
           onClick={isLogin ? handleLogin : handleSignUp}
-        >
-          {isLogin ? "Login" : "Sign Up"}
-        </button>
-
+          label={isLogin ? "Login" : "Sign Up"}
+          className="w-full p-3 mb-4 rounded-md hover:bg-blue-600"
+        />
         <p
           className="mt-4 text-center text-blue-500 cursor-pointer underline"
           onClick={togglePane}
