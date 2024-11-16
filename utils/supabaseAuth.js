@@ -1,17 +1,12 @@
-import CustomToast from "@/CustomToast";
 import { supabase } from "./supabaseClient";
 
 export const signUpVendor = async (name, email, company_name, password) => {
-  if (!name || !email || !company_name || !password) {
-    CustomToast.error("All fields are required.");
-    return { data: null, error: new Error("Missing fields") };
-  }
-
+  // Create a user in Supabase Auth
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { name, company_name },
+      data: { name, company_name }, // Save name and company_name in user metadata
     },
   });
 
@@ -21,21 +16,21 @@ export const signUpVendor = async (name, email, company_name, password) => {
   }
 
   const user = data?.user;
+
+  // Insert a new vendor (without the email column)
   const { error: insertError } = await supabase.from("vendors").insert([
     {
       name,
-      email,
       company_name,
-      user_id: user.id,
+      user_id: user.id, // Link vendor to the user via user_id
     },
   ]);
 
   if (insertError) {
-    CustomToast.error(`Error inserting vendor: ${insertError.message}`);
+    console.error("Error inserting vendor data:", insertError.message);
     return { data: null, error: insertError };
   }
 
-  CustomToast.success("Vendor signed up successfully!");
   return { data, error: null };
 };
 

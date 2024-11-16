@@ -20,7 +20,13 @@ const AuthPage = () => {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
+  // Frontend signup logic
   const handleSignUp = async () => {
+    if (!name || !companyName) {
+      CustomToast.error("Name and Company Name are required.");
+      return;
+    }
+
     const { data, error } = await signUpVendor(
       name,
       email,
@@ -29,7 +35,7 @@ const AuthPage = () => {
     );
 
     if (error) {
-      CustomToast.error(error.message);
+      CustomToast.error("Error signing up");
       return;
     }
 
@@ -38,6 +44,11 @@ const AuthPage = () => {
   };
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      CustomToast.error("Email and password are required for login!");
+      return;
+    }
+
     const { vendor, error } = await saveSession(email, password);
 
     if (error) {
@@ -46,6 +57,7 @@ const AuthPage = () => {
     }
 
     if (vendor) {
+      CustomToast.success("Logged in successfully");
       router.push(`/vendor/dashboard`);
     }
   };
