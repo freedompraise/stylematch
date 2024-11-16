@@ -7,12 +7,12 @@ import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
 import { getVendorDetails, getVendorProducts } from "@/api/vendor";
 
-const VendorPage = (searchQuery) => {
+const VendorPage = ({ searchQuery }) => {
   const router = useRouter();
   const { companyName } = router.query;
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [vendor, setVendor] = useState(null);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +33,6 @@ const VendorPage = (searchQuery) => {
           const { vendor: vendorData, error: vendorError } =
             await getVendorDetails(companyName);
           setVendor(vendorData);
-          console.log("vendorData", vendorData);
           if (vendorError || !vendorData) {
             throw new Error("Failed to fetch vendor details");
           }
@@ -45,6 +44,7 @@ const VendorPage = (searchQuery) => {
           }
 
           setProducts(productsData);
+          setFilteredProducts(productsData);
         } catch (err) {
           setError(err.message);
         } finally {
@@ -56,13 +56,12 @@ const VendorPage = (searchQuery) => {
     return () => clearTimeout(delayedMessageTimer);
   }, [companyName]);
 
+  // Filter products based on searchQuery
   useEffect(() => {
-    if (typeof searchQuery === "string" && searchQuery) {
+    if (searchQuery) {
       setFilteredProducts(
-        products.filter(
-          (product) =>
-            product.name &&
-            product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
     } else {
@@ -89,34 +88,31 @@ const VendorPage = (searchQuery) => {
     <>
       {vendor ? (
         <section className="container mx-auto lg:px-16 sm:px-4 my-8 min-h-screen">
-          <>
-            <HeroSection vendor={vendor} />
+          <HeroSection vendor={vendor} />
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onViewDetails={setSelectedProduct}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <p className="text-2xl font-semibold">Oooops.....</p>
+              <p className="text-lg">This vendor has no products available</p>
+            </div>
+          )}
 
-            {products.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onViewDetails={setSelectedProduct}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <p className="text-2xl font-semibold">Oooops.....</p>
-                <p className="text-lg">This vendor has no products available</p>
-              </div>
-            )}
-
-            <ChatPopup vendorPhoneNumber={vendor.phone} />
-            {selectedProduct && (
-              <ProductDetailModal
-                product={selectedProduct}
-                onClose={() => setSelectedProduct(null)}
-              />
-            )}
-          </>
+          <ChatPopup vendorPhoneNumber={vendor.phone} />
+          {selectedProduct && (
+            <ProductDetailModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+            />
+          )}
         </section>
       ) : (
         <ErrorDisplay message={error} />
