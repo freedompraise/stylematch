@@ -6,7 +6,7 @@ const statusColors = {
   delivered: "bg-green-100 text-green-800",
 };
 
-const OrderList = ({ title, orders, onConfirm }) => {
+const OrderList = ({ title, orders = {}, onConfirm }) => {
   if (!orders.length) {
     return (
       <div className="p-4 border rounded-md shadow-md text-center">
