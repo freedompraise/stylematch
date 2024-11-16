@@ -203,25 +203,32 @@ export const getAccountDetails = async (vendorId) => {
   return Array.isArray(data.bank_details) ? data.bank_details : [];
 };
 export const addAccountDetails = async (vendorId, accountDetails) => {
+  if (!vendorId) throw new Error("Vendor ID is required");
+
   const { data, error } = await supabase
     .from("vendors")
     .select("bank_details")
     .eq("user_id", vendorId)
     .single();
+
   if (error) {
     throw new Error(error.message);
   }
+
   const updatedBankDetails = Array.isArray(data.bank_details)
-    ? [...data.bank_details, accountDetails]
-    : [accountDetails];
+    ? [...data.bank_details, { id: crypto.randomUUID(), ...accountDetails }]
+    : [{ id: crypto.randomUUID(), ...accountDetails }];
+
   const { error: updateError } = await supabase
     .from("vendors")
     .update({ bank_details: updatedBankDetails })
     .eq("user_id", vendorId);
+
   if (updateError) {
     throw new Error(updateError.message);
   }
-  return updatedBankDetails;
+
+  return updatedBankDetails[updatedBankDetails.length - 1];
 };
 
 export const updateAccountDetails = async (
