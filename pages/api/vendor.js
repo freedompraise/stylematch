@@ -4,6 +4,11 @@ import {
   deleteImageFromCloudinary,
   uploadImageToCloudinary,
 } from "@/cloudinary";
+import CustomToast from "@/CustomToast";
+
+/*
+  CUSTOMER VIEW
+*/
 
 export const getVendorDetails = async (company_name) => {
   console.log("company_name", company_name);
@@ -34,6 +39,9 @@ export const getVendorProducts = async (vendorId) => {
   return { products: productsData, error: null };
 };
 
+/* 
+  VENDOR PROFILE
+*/
 export const updateVendorProfile = async (vendorData) => {
   try {
     if (!vendorData.user_id) {
@@ -68,4 +76,60 @@ export const replaceBannerImage = async (oldImageUrl, newImage) => {
 
   const newImageUrl = await uploadImageToCloudinary(newImage);
   return newImageUrl;
+};
+
+/*
+   DELIVERY
+*/
+
+export const getDeliveryOptions = async (vendorId) => {
+  const { data, error } = await supabase
+    .from("deliveryoptions")
+    .select("*")
+    .eq("vendor_id", vendorId);
+
+  if (error) {
+    console.error("Error fetching delivery options:", error.message);
+    return { deliveryOptions: null, error };
+  }
+  return { deliveryOptions: data, error: null };
+};
+
+export const updateDeliveryOption = async (optionId, updatedData) => {
+  const { data, error } = await supabase
+    .from("deliveryoptions")
+    .update(updatedData)
+    .eq("id", optionId);
+
+  if (error) {
+    console.error("Error updating delivery option:", error.message);
+    return { success: false, error };
+  }
+  CustomToast.success("Delivery option updated successfully!");
+  return { success: true, data };
+};
+
+export const addDeliveryOption = async (newOption) => {
+  const { data, error } = await supabase
+    .from("deliveryoptions")
+    .insert(newOption);
+
+  if (error) {
+    console.error("Error adding delivery option:", error.message);
+    return { success: false, error };
+  }
+  return { success: true, data };
+};
+
+export const deleteDeliveryOption = async (optionId) => {
+  const { data, error } = await supabase
+    .from("deliveryoptions")
+    .delete()
+    .eq("id", optionId);
+
+  if (error) {
+    console.error("Error deleting delivery option:", error.message);
+    return { success: false, error };
+  }
+  return { success: true, data };
 };
