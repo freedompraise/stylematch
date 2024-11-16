@@ -4,7 +4,7 @@ import {
   FaFacebookSquare,
 } from "react-icons/fa";
 
-const HeroSection = ({ vendor }) => {
+const HeroSection = ({ vendor = {} }) => {
   return (
     <section className="bg-gray-100 py-10">
       <div className="container mx-auto flex flex-col items-center text-center">
