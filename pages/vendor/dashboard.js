@@ -8,6 +8,7 @@ import {
   FaStoreAlt,
   FaQuestionCircle,
 } from "react-icons/fa";
+import PreLoader from "@/Preloader";
 
 const VendorPage = () => {
   const [products, setProducts] = useState([]);
@@ -28,7 +29,7 @@ const VendorPage = () => {
   }, [vendor, authLoading]);
 
   if (authLoading || isLoading) {
-    return <div>Loading...</div>;
+    return <PreLoader />;
   }
 
   if (!vendor) {
