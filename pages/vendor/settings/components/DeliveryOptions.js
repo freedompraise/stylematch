@@ -116,7 +116,7 @@ const DeliveryOptions = ({ vendorId }) => {
 
   return (
     <div className="p-4 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold mb-4">Delivery Options</h2>
+      <h5 className="text-xl font-semibold mb-4">Delivery Options</h5>
       <div className="space-y-4">
         {deliveryOptions.map((option) => (
           <div key={option.id} className="p-4 border rounded-md">

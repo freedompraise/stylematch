@@ -4,17 +4,21 @@ import { useAuth } from "context/useAuthContext";
 import { useRouter } from "next/router";
 import CustomToast from "@/CustomToast";
 import LoadingButton from "@/LoadingButton";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const { saveSession } = useAuth();
   const router = useRouter();
 
   const togglePane = () => setIsLogin(!isLogin);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleSignUp = async () => {
     const { data, error } = await signUpVendor(
@@ -61,13 +65,21 @@ const AuthPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <input
-          type="password"
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            className="absolute right-4 top-4"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
 
         {!isLogin && (
           <>
