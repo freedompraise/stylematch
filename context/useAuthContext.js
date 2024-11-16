@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { setCookie, hasCookie, getCookie, deleteCookie } from "cookies-next";
 import { loginVendor, logoutVendor } from "../utils/supabaseAuth";
-import CustomToast from "@/CustomToast";
 
 const AuthContext = createContext({
   vendor: null,
@@ -19,7 +18,13 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const excludePaths = ["/auth", "", "/"];
+  const excludePaths = [
+    "/auth",
+    "",
+    "/",
+    "/auth/verification-complete",
+    "/auth/confirm-email",
+  ];
 
   useEffect(() => {
     const initialize = async () => {
