@@ -6,6 +6,7 @@ import {
   faTimes,
   faSignOut,
   faLink,
+  faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { faProductHunt } from "@fortawesome/free-brands-svg-icons";
@@ -71,6 +72,10 @@ const DropdownNav = ({ closeDropdown }) => {
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
           <Link href="/comingSoon">Orders</Link>
+        </li>
+        <li className="hover:bg-blue-600 hover:text-white p-2">
+          <FontAwesomeIcon icon={faGear} className="mr-2" />
+          <Link href="/vendor/settings">Settings</Link>
         </li>
         <li
           onClick={copyVendorLink}
