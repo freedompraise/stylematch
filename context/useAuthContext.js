@@ -89,7 +89,6 @@ const AuthProvider = ({ children }) => {
     setVendor(null);
     deleteCookie("vendor_session");
     vendorCache = null;
-    CustomToast.success("Logged out successfully!");
     router.push("/auth");
   };
 

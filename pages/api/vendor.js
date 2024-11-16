@@ -133,3 +133,52 @@ export const deleteDeliveryOption = async (optionId) => {
   }
   return { success: true, data };
 };
+
+/*
+  ORDERS
+*/
+
+export const getOrders = async (vendorId) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("vendor_id", vendorId);
+
+  if (error) {
+    console.error("Error fetching orders:", error.message);
+    return { orders: [], error };
+  }
+  return { orders: data, error: null };
+};
+
+export const confirmOrder = async (orderId, proofOfPaymentUrl) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ status: "confirmed", proof_of_payment_url: null })
+    .eq("id", orderId);
+
+  try {
+    await deleteImageFromCloudinary(getPublicId(proofOfPaymentUrl));
+  } catch (error) {
+    throw new Error();
+  }
+
+  if (error) {
+    console.error("Error confirming order:", error.message);
+    return { success: false, error };
+  }
+  return { success: true, data };
+};
+
+export const deliverOrder = async (orderId) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ status: "delivered" })
+    .eq("id", orderId);
+
+  if (error) {
+    console.error("Error marking product as delivered", error.message);
+    return { success: false, error };
+  }
+  return { success: true, data };
+};

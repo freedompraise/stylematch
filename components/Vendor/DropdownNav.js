@@ -71,7 +71,7 @@ const DropdownNav = ({ closeDropdown }) => {
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-          <Link href="/comingSoon">Orders</Link>
+          <Link href="/vendor/orders">Orders</Link>
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faGear} className="mr-2" />
