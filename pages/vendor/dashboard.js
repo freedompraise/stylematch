@@ -106,7 +106,7 @@ const VendorPage = () => {
                     Personalize your store to match your brand.
                   </p>
                   <Link
-                    href="/comingsoon"
+                    href="/vendor/settings"
                     className="inline-block bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600"
                   >
                     Customize Store

@@ -1,4 +1,3 @@
-// ProductList.js
 import { useState, useEffect } from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { fetchProducts } from "../../api/product";

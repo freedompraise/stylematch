@@ -35,10 +35,9 @@
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "react-icons": "^5.3.0",
-    "react-scroll": "^1.8.9",
+    "react-time-range": "^1.0.4",
     "sonner": "^1.5.0",
-    "tailwindcss": "^3.2.7",
-    "typewriter-effect": "^2.19.0"
+    "tailwindcss": "^3.2.7"
   },
   "devDependencies": {
     "eslint": "8.36.0",
