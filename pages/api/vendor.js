@@ -187,6 +187,33 @@ export const deliverOrder = async (orderId) => {
   BANK DETAILS
 */
 
+export const modifyAccountDetails = async (vendorId, modifierFn) => {
+  if (!vendorId) throw new Error("Vendor ID is required");
+
+  const { data, error } = await supabase
+    .from("vendors")
+    .select("bank_details")
+    .eq("user_id", vendorId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const updatedBankDetails = modifierFn(data.bank_details || []);
+
+  const { error: updateError } = await supabase
+    .from("vendors")
+    .update({ bank_details: updatedBankDetails })
+    .eq("user_id", vendorId);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+
+  return updatedBankDetails;
+};
+
 export const getAccountDetails = async (vendorId) => {
   if (!vendorId) throw new Error("Vendor ID is required");
 
@@ -202,33 +229,12 @@ export const getAccountDetails = async (vendorId) => {
 
   return Array.isArray(data.bank_details) ? data.bank_details : [];
 };
+
 export const addAccountDetails = async (vendorId, accountDetails) => {
-  if (!vendorId) throw new Error("Vendor ID is required");
-
-  const { data, error } = await supabase
-    .from("vendors")
-    .select("bank_details")
-    .eq("user_id", vendorId)
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const updatedBankDetails = Array.isArray(data.bank_details)
-    ? [...data.bank_details, { id: crypto.randomUUID(), ...accountDetails }]
-    : [{ id: crypto.randomUUID(), ...accountDetails }];
-
-  const { error: updateError } = await supabase
-    .from("vendors")
-    .update({ bank_details: updatedBankDetails })
-    .eq("user_id", vendorId);
-
-  if (updateError) {
-    throw new Error(updateError.message);
-  }
-
-  return updatedBankDetails[updatedBankDetails.length - 1];
+  return await modifyAccountDetails(vendorId, (bankDetails) => [
+    ...bankDetails,
+    { id: crypto.randomUUID(), ...accountDetails },
+  ]);
 };
 
 export const updateAccountDetails = async (
@@ -236,52 +242,15 @@ export const updateAccountDetails = async (
   accountId,
   updatedDetails
 ) => {
-  const { data, error } = await supabase
-    .from("vendors")
-    .select("bank_details")
-    .eq("user_id", vendorId)
-    .single();
-  if (error) {
-    throw new Error(error.message);
-  }
-  const updatedBankDetails = data.bank_details.map((account) =>
-    account.id === accountId ? updatedDetails : account
+  return await modifyAccountDetails(vendorId, (bankDetails) =>
+    bankDetails.map((account) =>
+      account.id === accountId ? { ...account, ...updatedDetails } : account
+    )
   );
-  const { error: updateError } = await supabase
-    .from("vendors")
-    .update({ bank_details: updatedBankDetails })
-    .eq("user_id", vendorId);
-  if (updateError) {
-    throw new Error(updateError.message);
-  }
-  return updatedBankDetails;
 };
 
 export const deleteAccountDetails = async (vendorId, accountId) => {
-  if (!vendorId) throw new Error("Vendor ID is required");
-
-  const { data, error } = await supabase
-    .from("vendors")
-    .select("bank_details")
-    .eq("user_id", vendorId)
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const updatedBankDetails = Array.isArray(data.bank_details)
-    ? data.bank_details.filter((account) => account.id !== accountId)
-    : [];
-
-  const { error: deleteError } = await supabase
-    .from("vendors")
-    .update({ bank_details: updatedBankDetails })
-    .eq("user_id", vendorId);
-
-  if (deleteError) {
-    throw new Error(deleteError.message);
-  }
-
-  return updatedBankDetails;
+  return await modifyAccountDetails(vendorId, (bankDetails) =>
+    bankDetails.filter((account) => account.id !== accountId)
+  );
 };
