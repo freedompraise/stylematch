@@ -6,39 +6,6 @@ import {
 } from "@/cloudinary";
 import CustomToast from "@/CustomToast";
 
-/*
-  CUSTOMER VIEW
-*/
-
-export const getVendorDetails = async (company_name) => {
-  console.log("company_name", company_name);
-  const { data: vendorData, error } = await supabase
-    .from("vendors")
-    .select("*")
-    .ilike("company_name", `%${company_name.trim().toLowerCase()}%`)
-    .single();
-
-  if (error || !vendorData) {
-    console.error("Error fetching vendor data:", error?.message);
-    return { vendor: null, error };
-  }
-  return { vendor: vendorData, error: null };
-};
-
-export const getVendorProducts = async (vendorId) => {
-  const { data: productsData, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("vendor_id", vendorId);
-
-  if (error) {
-    console.error("Error fetching products:", error.message);
-    return { products: [], error };
-  }
-
-  return { products: productsData, error: null };
-};
-
 /* 
   VENDOR PROFILE
 */
