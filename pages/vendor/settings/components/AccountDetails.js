@@ -6,6 +6,7 @@ import {
 } from "@/api/vendor";
 import LoadingButton from "@/LoadingButton";
 import CustomToast from "@/CustomToast";
+import { Box, Typography } from "@mui/material";
 
 const AccountDetails = ({ vendorId, initialBankDetails }) => {
   const [bankDetails, setBankDetails] = useState(initialBankDetails || []);
@@ -98,8 +99,10 @@ const AccountDetails = ({ vendorId, initialBankDetails }) => {
   };
 
   return (
-    <div className="p-4 lg:p-12 container bg-white shadow-md rounded-md">
-      <h5 className="text-xl font-semibold mb-4">Account Details</h5>
+    <Box p={4} bgcolor="white" boxShadow={3} borderRadius={2}>
+      <Typography variant="h6" fontWeight="semibold" mb={3}>
+        Bank Account Details
+      </Typography>
       <div className="flex flex-col gap-4">
         <input
           type="text"
@@ -162,7 +165,7 @@ const AccountDetails = ({ vendorId, initialBankDetails }) => {
           </div>
         ))}
       </div>
-    </div>
+    </Box>
   );
 };
 

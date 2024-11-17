@@ -114,7 +114,7 @@ const DeliveryOptions = ({ vendorId }) => {
 
   return (
     <Box p={4} bgcolor="white" boxShadow={3} borderRadius={2}>
-      <Typography variant="h5" fontWeight="bold" mb={3}>
+      <Typography variant="h6" fontWeight="semibold" mb={3}>
         Delivery Options
       </Typography>
 

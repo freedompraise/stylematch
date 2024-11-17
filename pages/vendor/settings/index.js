@@ -1,13 +1,16 @@
 import { useAuth } from "context/useAuthContext";
 import DeliveryOptions from "./components/DeliveryOptions";
 import AccountDetails from "./components/AccountDetails";
+import Breadcrumb from "@/Breadcrumb";
 
 const SettingsPage = () => {
   const { vendor } = useAuth();
 
   return (
     <div className="container mx-auto py-6 px-4 lg:px-12">
-      <h1 className="text-2xl font-bold text-blue-600 mb-6">Store Settings</h1>
+      <Breadcrumb
+        links={[{ href: "/vendor", label: "Dashboard" }, { label: "Settings" }]}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Delivery Options Section */}
         <DeliveryOptions vendorId={vendor?.user_id} />
