@@ -1,34 +1,41 @@
-import { Button } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Button,
+} from "@mui/material";
 
-const BankSelectionStep = ({
-  bankDetails,
-  selectedBank,
-  setSelectedBank,
-  onOrder,
-}) => (
+const BankSelectionStep = ({ bankDetails, onOrder }) => (
   <div>
-    <h2 className="text-xl font-bold mb-4">Select Bank for Payment</h2>
-    {bankDetails.map((bank) => (
-      <div key={bank.id} className="mb-4">
-        <input
-          type="radio"
-          id={bank.id}
-          name="bank"
-          value={bank.id}
-          onChange={() => setSelectedBank(bank)}
-        />
-        <label htmlFor={bank.id} className="ml-2">
-          {`${bank.bankName} - ${bank.accountName} - ${bank.accountNumber}`}
-        </label>
-      </div>
-    ))}
+    <h2 className="text-xl font-bold mb-4">Bank Details</h2>
+    <p>Please transfer the payment to one of the following bank accounts:</p>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Bank Name</TableCell>
+          <TableCell>Account Name</TableCell>
+          <TableCell>Account Number</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {bankDetails.map((bank, index) => (
+          <TableRow key={index}>
+            <TableCell>{bank.name}</TableCell>
+            <TableCell>{bank.account_name}</TableCell>
+            <TableCell>{bank.account_number}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
     <Button
       onClick={onOrder}
       variant="contained"
       color="primary"
-      disabled={!selectedBank.id}
+      className="mt-4"
     >
-      Proceed to Payment
+      Proceed
     </Button>
   </div>
 );
