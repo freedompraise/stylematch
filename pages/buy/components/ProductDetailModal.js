@@ -5,12 +5,10 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  MenuItem,
-  Select,
-  InputLabel,
   CircularProgress,
-  TextField,
 } from "@mui/material";
+import DeliveryStep from "./DeliveryStep";
+import BankSelectionStep from "./BankSelectionStep";
 import {
   saveOrder,
   uploadProofOfPayment,
@@ -20,7 +18,7 @@ import {
 const ProductDetailModal = ({ product = {}, onClose }) => {
   const [step, setStep] = useState(1);
   const [deliveryOptions, setDeliveryOptions] = useState([]);
-  const [selectedDelivery, setSelectedDelivery] = useState("");
+  const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedBank, setSelectedBank] = useState({});
@@ -31,14 +29,19 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!product?.vendor?.user_id) {
+      if (!product?.vendor_id) {
         setError("Vendor information is missing.");
         return;
       }
       setLoading(true);
       try {
-        const options = await fetchDeliveryOptions(product.vendor.user_id);
+        const options = await fetchDeliveryOptions(product.vendor_id);
         setDeliveryOptions(options);
+        if (options.length > 0) {
+          setSelectedDelivery(options[0].id);
+          setAvailableTimes(options[0].available_times);
+          setSelectedTime(options[0].available_times[0]);
+        }
       } catch (err) {
         setError("Failed to fetch delivery options.");
       } finally {
@@ -48,10 +51,10 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
     fetchData();
   }, [product]);
 
-  const handleDeliveryChange = (deliveryId) => {
-    const selected = deliveryOptions.find((opt) => opt.id === deliveryId);
-    setSelectedDelivery(deliveryId);
-    setAvailableTimes(selected?.available_times || []);
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
   };
 
   const handleOrder = async () => {
@@ -59,17 +62,15 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
       setError("Vendor information is missing.");
       return;
     }
-
     setLoading(true);
     setError("");
     const orderData = {
       product_id: product.id,
       delivery_time: selectedTime,
       delivery_location: selectedDelivery,
-      vendor_id: product.vendor.user_id,
+      vendor_id: product.vendor_id,
       status: "pending_payment",
     };
-
     try {
       const { success, orderId } = await saveOrder(orderData);
       if (success) {
@@ -87,14 +88,11 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
 
   const handleUploadProof = async () => {
     if (!proofOfPayment) return;
-
     setLoading(true);
     setError("");
-
     try {
       const formData = new FormData();
       formData.append("proof", proofOfPayment);
-
       const { success } = await uploadProofOfPayment(orderId, formData);
       if (success) {
         setStep(4);
@@ -109,88 +107,31 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
   };
 
   const renderContent = () => {
-    if (loading) {
-      return <CircularProgress />;
-    }
-
-    if (error) {
-      return <p className="text-red-500">{error}</p>;
-    }
+    if (loading) return <CircularProgress />;
+    if (error) return <p className="text-red-500">{error}</p>;
 
     switch (step) {
       case 1:
         return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Select Delivery Location</h2>
-            <InputLabel id="delivery-location-label">Location</InputLabel>
-            <Select
-              labelId="delivery-location-label"
-              value={selectedDelivery}
-              onChange={(e) => handleDeliveryChange(e.target.value)}
-              fullWidth
-            >
-              {deliveryOptions.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.location}
-                </MenuItem>
-              ))}
-            </Select>
-            {availableTimes.length > 0 && (
-              <>
-                <h2 className="text-xl font-bold mt-4 mb-2">
-                  Select Delivery Time
-                </h2>
-                <Select
-                  value={selectedTime}
-                  onChange={(e) => setSelectedTime(e.target.value)}
-                  fullWidth
-                >
-                  {availableTimes.map((time, index) => (
-                    <MenuItem key={index} value={time}>
-                      {time}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </>
-            )}
-            <Button
-              onClick={() => setStep(2)}
-              variant="contained"
-              color="primary"
-              disabled={!selectedDelivery || !selectedTime}
-              className="mt-4"
-            >
-              Next
-            </Button>
-          </div>
+          <DeliveryStep
+            deliveryOptions={deliveryOptions}
+            selectedDelivery={selectedDelivery}
+            availableTimes={availableTimes}
+            selectedTime={selectedTime}
+            setSelectedDelivery={setSelectedDelivery}
+            setAvailableTimes={setAvailableTimes}
+            setSelectedTime={setSelectedTime}
+            onNext={() => setStep(2)}
+          />
         );
       case 2:
         return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Select Bank for Payment</h2>
-            {product?.vendor?.bank_details?.map((bank) => (
-              <div key={bank.id} className="mb-4">
-                <input
-                  type="radio"
-                  id={bank.id}
-                  name="bank"
-                  value={bank.id}
-                  onChange={() => setSelectedBank(bank)}
-                />
-                <label htmlFor={bank.id} className="ml-2">
-                  {`${bank.bankName} - ${bank.accountName} - ${bank.accountNumber}`}
-                </label>
-              </div>
-            ))}
-            <Button
-              onClick={handleOrder}
-              variant="contained"
-              color="primary"
-              disabled={!selectedBank.id}
-            >
-              Proceed to Payment
-            </Button>
-          </div>
+          <BankSelectionStep
+            bankDetails={product?.vendor?.bank_details || []}
+            selectedBank={selectedBank}
+            setSelectedBank={setSelectedBank}
+            onOrder={handleOrder}
+          />
         );
       case 3:
         return (
@@ -238,13 +179,22 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{product.name}</DialogTitle>
       <DialogContent>{renderContent()}</DialogContent>
-      <DialogActions>
-        {step !== 4 && (
-          <Button onClick={onClose} color="secondary">
-            Close
-          </Button>
-        )}
-      </DialogActions>
+      <div className="flex justify-end">
+        <DialogActions>
+          {step > 1 && (
+            <Button onClick={handleBack} color="primary">
+              Back
+            </Button>
+          )}
+        </DialogActions>
+        <DialogActions>
+          {step !== 4 && (
+            <Button onClick={onClose} color="secondary">
+              Close
+            </Button>
+          )}
+        </DialogActions>
+      </div>
     </Dialog>
   );
 };

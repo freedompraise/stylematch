@@ -2,7 +2,6 @@ import { uploadImageToCloudinary } from "@/cloudinary";
 import { supabase } from "@/supabaseClient";
 
 export const getVendorDetails = async (company_name) => {
-  console.log("company_name", company_name);
   const { data: vendorData, error } = await supabase
     .from("vendors")
     .select("*")
