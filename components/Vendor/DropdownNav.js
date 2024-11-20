@@ -59,7 +59,7 @@ const DropdownNav = ({ closeDropdown }) => {
       <ul className="space-y-4 px-6">
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faHome} className="mr-2" />
-          <Link href="/vendor/dashboard">Dashboard</Link>
+          <Link href="/vendor">Dashboard</Link>
         </li>
         <li className="hover:bg-blue-600 hover:text-white p-2">
           <FontAwesomeIcon icon={faUser} className="mr-2" />

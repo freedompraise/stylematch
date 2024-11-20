@@ -1,105 +1,108 @@
 import { useState, useEffect } from "react";
 import {
-  getAccountDetails,
   updateAccountDetails,
   addAccountDetails,
   deleteAccountDetails,
 } from "@/api/vendor";
 import LoadingButton from "@/LoadingButton";
 import CustomToast from "@/CustomToast";
+import { Box, Typography } from "@mui/material";
 
-const AccountDetails = ({ vendorId }) => {
-  const [accountDetails, setAccountDetails] = useState([]);
+const AccountDetails = ({ vendorId, initialBankDetails }) => {
+  const [bankDetails, setBankDetails] = useState(initialBankDetails || []);
   const [accountNumber, setAccountNumber] = useState("");
   const [bankName, setBankName] = useState("");
   const [accountName, setAccountName] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [currentAccountId, setCurrentAccountId] = useState(null);
+  const [editingAccountId, setEditingAccountId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!vendorId) {
-      console.error("Vendor ID is undefined");
-      return;
+    if (initialBankDetails) {
+      setBankDetails(initialBankDetails);
     }
-    const fetchAccountDetails = async () => {
-      try {
-        const details = await getAccountDetails(vendorId);
-        setAccountDetails(details);
-      } catch (error) {
-        console.error("Error fetching account details:", error.message);
-      }
-    };
-    fetchAccountDetails();
-  }, [vendorId]);
+  }, [initialBankDetails]);
 
-  const validateForm = () => {
+  const handleAddOrUpdateAccount = async () => {
     if (!accountNumber || !bankName || !accountName) {
       CustomToast.error("All fields are required.");
-      return false;
+      return;
     }
 
-    const isDuplicate = accountDetails.some(
-      (acc) =>
-        acc.accountNumber === accountNumber &&
-        acc.bankName.toLowerCase() === bankName.toLowerCase() &&
-        (!editMode || acc.id !== currentAccountId) // Ignore current account in edit mode
-    );
+    setIsLoading(true);
 
-    if (isDuplicate) {
-      CustomToast.error(
-        "An account with this Account Number and Bank Name already exists."
-      );
-      return false;
+    try {
+      if (editMode) {
+        const updatedDetails = {
+          id: editingAccountId,
+          accountNumber,
+          bankName,
+          accountName,
+        };
+        const updatedBankDetails = await updateAccountDetails(
+          vendorId,
+          editingAccountId,
+          updatedDetails
+        );
+        setBankDetails(updatedBankDetails);
+        CustomToast.success("Account updated successfully.");
+      } else {
+        const accountDetails = { accountNumber, bankName, accountName };
+        const updatedBankDetails = await addAccountDetails(
+          vendorId,
+          accountDetails
+        );
+        setBankDetails(updatedBankDetails);
+        CustomToast.success("Account added successfully.");
+      }
+
+      resetForm();
+    } catch (error) {
+      CustomToast.error(error.message || "An error occurred.");
+    } finally {
+      setIsLoading(false);
     }
-
-    return true;
   };
 
-  const handleSaveAccount = async () => {
-    if (!validateForm()) return;
+  const handleDeleteAccount = async (accountId) => {
+    if (!confirm("Are you sure you want to delete this account?")) return;
 
-    const account = { accountNumber, bankName, accountName };
-
-    if (editMode) {
-      await updateAccountDetails(vendorId, currentAccountId, account);
-      setAccountDetails(
-        accountDetails.map((acc) =>
-          acc.id === currentAccountId ? { ...acc, ...account } : acc
-        )
+    setIsLoading(true);
+    try {
+      const updatedBankDetails = await deleteAccountDetails(
+        vendorId,
+        accountId
       );
-      CustomToast.success("Account updated successfully");
-    } else {
-      const newAccount = await addAccountDetails(vendorId, account);
-      setAccountDetails((prevDetails) => [...prevDetails, newAccount]);
-      CustomToast.success("Account added successfully");
+      setBankDetails(updatedBankDetails);
+      CustomToast.success("Account deleted successfully.");
+    } catch (error) {
+      CustomToast.error(error.message || "An error occurred.");
+    } finally {
+      setIsLoading(false);
     }
-
-    // Reset form
-    setEditMode(false);
-    setAccountNumber("");
-    setBankName("");
-    setAccountName("");
   };
 
   const handleEditAccount = (account) => {
     setEditMode(true);
-    setCurrentAccountId(account.id);
+    setEditingAccountId(account.id);
     setAccountNumber(account.accountNumber);
     setBankName(account.bankName);
     setAccountName(account.accountName);
   };
 
-  const handleDeleteAccount = async (id) => {
-    await deleteAccountDetails(vendorId, id);
-    setAccountDetails((prevDetails) =>
-      prevDetails.filter((acc) => acc.id !== id)
-    );
-    CustomToast.success("Account deleted successfully");
+  const resetForm = () => {
+    setEditMode(false);
+    setEditingAccountId(null);
+    setAccountNumber("");
+    setBankName("");
+    setAccountName("");
   };
 
   return (
-    <div className="p-4 lg:p-12 container bg-white shadow-md rounded-md">
-      <h5 className="text-xl font-semibold mb-4">Account Details</h5>
+    <Box p={4} bgcolor="white" boxShadow={3} borderRadius={2}>
+      <Typography variant="h6" fontWeight="semibold" mb={3}>
+        Bank Account Details
+      </Typography>
       <div className="flex flex-col gap-4">
         <input
           type="text"
@@ -125,12 +128,17 @@ const AccountDetails = ({ vendorId }) => {
           value={accountName}
           onChange={(e) => setAccountName(e.target.value)}
         />
-        <LoadingButton onClick={handleSaveAccount}>
+        <LoadingButton onClick={handleAddOrUpdateAccount} isLoading={isLoading}>
           {editMode ? "Update Account" : "Add Account"}
         </LoadingButton>
+        {editMode && (
+          <button onClick={resetForm} className="text-gray-500 mt-2 underline">
+            Cancel Edit
+          </button>
+        )}
       </div>
       <div className="mt-6">
-        {accountDetails.map((account) => (
+        {bankDetails.map((account) => (
           <div
             key={account.id}
             className="p-4 border rounded-md flex items-center justify-between"
@@ -157,7 +165,7 @@ const AccountDetails = ({ vendorId }) => {
           </div>
         ))}
       </div>
-    </div>
+    </Box>
   );
 };
 

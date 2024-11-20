@@ -5,7 +5,7 @@ import ProductCard from "./components/ProductCard";
 import ProductDetailModal from "./components/ProductDetailModal";
 import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
-import { getVendorDetails, getVendorProducts } from "@/api/vendor";
+import { getVendorDetails, getVendorProducts } from "@/api/buy";
 
 const VendorPage = ({ searchQuery }) => {
   const router = useRouter();
@@ -110,6 +110,7 @@ const VendorPage = ({ searchQuery }) => {
           {selectedProduct && (
             <ProductDetailModal
               product={selectedProduct}
+              bankDetails={vendor.bank_details}
               onClose={() => setSelectedProduct(null)}
             />
           )}
