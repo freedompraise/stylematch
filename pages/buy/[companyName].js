@@ -110,6 +110,7 @@ const VendorPage = ({ searchQuery }) => {
           {selectedProduct && (
             <ProductDetailModal
               product={selectedProduct}
+              bankDetails={vendor.bank_details}
               onClose={() => setSelectedProduct(null)}
             />
           )}

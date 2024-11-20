@@ -3,24 +3,33 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   Button,
   CircularProgress,
+  Select,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
+  InputLabel,
 } from "@mui/material";
-import DeliveryStep from "./DeliveryStep";
-import BankSelectionStep from "./BankSelectionStep";
 import {
   saveOrder,
-  uploadProofOfPayment,
   fetchDeliveryOptions,
+  uploadProofOfPayment,
 } from "@/api/buy";
 
-const ProductDetailModal = ({ product = {}, onClose }) => {
-  const [step, setStep] = useState(1);
-  const [deliveryOptions, setDeliveryOptions] = useState([]);
+const ProductDetailModal = ({
+  product = { id: null, vendor_id: null, name: "", description: "", price: 0 },
+  bankDetails = [],
+  onClose,
+}) => {
+  const [deliveryOptions, setDeliveryOptions] = useState({ options: [] });
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
+  const [proofOfPayment, setProofOfPayment] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderId, setOrderId] = useState(null);
@@ -41,16 +50,11 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [product]);
 
-  const handleNext = (data) => {
-    if (step === 1) {
-      setSelectedDelivery(data.selectedDelivery);
-      setSelectedTime(data.selectedTime);
+    if (product?.vendor_id) {
+      fetchData();
     }
-    setStep((prev) => prev + 1);
-  };
+  }, [product.vendor_id]);
 
   const handleOrder = async () => {
     setLoading(true);
@@ -66,7 +70,6 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
       const { success, orderId } = await saveOrder(orderData);
       if (success) {
         setOrderId(orderId);
-        setStep(3);
       } else {
         throw new Error("Failed to save order.");
       }
@@ -77,80 +80,137 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
     }
   };
 
-  const renderContent = () => {
-    if (loading) return <CircularProgress />;
-    if (error) return <p className="text-red-500">{error}</p>;
-
-    switch (step) {
-      case 1:
-        return (
-          <DeliveryStep deliveryOptions={deliveryOptions} onNext={handleNext} />
-        );
-      case 2:
-        return (
-          <BankSelectionStep
-            bankDetails={product?.vendor?.bank_details || []}
-            onOrder={handleOrder}
-          />
-        );
-      case 3:
-        return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Upload Proof of Payment</h2>
-            <TextField
-              type="file"
-              inputProps={{ accept: "image/*" }}
-              fullWidth
-              onChange={(e) => setProofOfPayment(e.target.files[0])}
-            />
-            <Button
-              onClick={() => setStep(4)}
-              variant="contained"
-              color="primary"
-              disabled={!proofOfPayment}
-              className="mt-4"
-            >
-              Upload Proof
-            </Button>
-          </div>
-        );
-      case 4:
-        return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Purchase Complete</h2>
-            <p>You’ll hear from the vendor soon. Thank you!</p>
-            <Button
-              onClick={() =>
-                (window.location.href = `/vendor/${product?.vendor?.user_id}`)
-              }
-              variant="outlined"
-              color="primary"
-            >
-              Go Back to Vendor Page
-            </Button>
-          </div>
-        );
-      default:
-        return null;
+  const handleProofUpload = async () => {
+    if (!proofOfPayment) {
+      alert("Please upload a proof of payment.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("orderId", orderId);
+      formData.append("proof", proofOfPayment);
+      await uploadProofOfPayment(formData);
+      alert("Proof of payment uploaded successfully!");
+    } catch (err) {
+      alert("Failed to upload proof of payment.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>{product.name}</DialogTitle>
-      <DialogContent>{renderContent()}</DialogContent>
-      <DialogActions>
-        {step > 1 && (
-          <Button onClick={() => setStep((prev) => prev - 1)} color="primary">
-            Back
+      <DialogContent>
+        {loading && <CircularProgress />}
+        {error && <p className="text-red-500">{error}</p>}
+        <div>
+          <h2 className="text-lg font-bold mb-2">Product Details</h2>
+          <p>
+            <strong>Description:</strong> {product.description}
+          </p>
+          <p>
+            <strong>Price:</strong> ${product.price}
+          </p>
+        </div>
+        <div className="mt-4">
+          <h2 className="text-lg font-bold mb-4">Select Delivery</h2>
+          <InputLabel id="delivery-location-label">Location</InputLabel>
+          <Select
+            labelId="delivery-location-label"
+            value={selectedDelivery || ""}
+            onChange={(e) => setSelectedDelivery(e.target.value)}
+            fullWidth
+          >
+            {console.log("Delivery Options:", deliveryOptions)}
+            {deliveryOptions?.options?.length > 0 ? (
+              deliveryOptions.options.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.location}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No delivery options available</MenuItem>
+            )}
+          </Select>
+
+          {selectedDelivery && (
+            <>
+              <InputLabel className="mt-4">Select Delivery Time</InputLabel>
+              <Select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                fullWidth
+              >
+                {deliveryOptions.options.find(
+                  (opt) => opt.id === selectedDelivery
+                )?.available_times?.length > 0 ? (
+                  deliveryOptions.options
+                    .find((opt) => opt.id === selectedDelivery)
+                    .available_times.map((time, index) => (
+                      <MenuItem key={index} value={time}>
+                        {time}
+                      </MenuItem>
+                    ))
+                ) : (
+                  <MenuItem disabled>No available times</MenuItem>
+                )}
+              </Select>
+            </>
+          )}
+        </div>
+        <div>
+          <h2 className="text-lg font-bold mb-4">Bank Details</h2>
+          <p>
+            Please transfer the payment to one of the following bank accounts:
+          </p>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Bank Name</TableCell>
+                <TableCell>Account Name</TableCell>
+                <TableCell>Account Number</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {bankDetails?.map((bank, index) => (
+                <TableRow key={index}>
+                  <TableCell>{bank.name}</TableCell>
+                  <TableCell>{bank.account_name}</TableCell>
+                  <TableCell>{bank.account_number}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div>
+          <h2 className="text-lg font-bold mb-4">Upload Proof of Payment</h2>
+          <TextField
+            type="file"
+            inputProps={{ accept: "image/*" }}
+            fullWidth
+            onChange={(e) => setProofOfPayment(e.target.files[0])}
+          />
+          <Button
+            onClick={handleProofUpload}
+            variant="contained"
+            color="primary"
+            className="mt-4"
+            disabled={!proofOfPayment}
+          >
+            Upload Proof
           </Button>
-        )}
-        {step < 4 && (
-          <Button onClick={onClose} color="secondary">
-            Close
-          </Button>
-        )}
-      </DialogActions>
+        </div>
+      </DialogContent>
+      <Button
+        onClick={onClose}
+        color="secondary"
+        variant="outlined"
+        className="mt-4"
+      >
+        Close
+      </Button>
     </Dialog>
   );
 };
