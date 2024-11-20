@@ -20,9 +20,7 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
   const [step, setStep] = useState(1);
   const [deliveryOptions, setDeliveryOptions] = useState([]);
   const [selectedDelivery, setSelectedDelivery] = useState(null);
-  const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
-  const [proofOfPayment, setProofOfPayment] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderId, setOrderId] = useState(null);
@@ -37,8 +35,6 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
       try {
         const options = await fetchDeliveryOptions(product.vendor_id);
         setDeliveryOptions(options);
-        setSelectedDelivery(options[0]?.id || null);
-        setAvailableTimes(options[0]?.available_times || []);
       } catch (err) {
         setError("Failed to fetch delivery options.");
       } finally {
@@ -48,16 +44,11 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
     fetchData();
   }, [product]);
 
-  const handleNext = () => {
-    if (step === 1 && !selectedDelivery) {
-      setError("Please select a delivery location.");
-      return;
+  const handleNext = (data) => {
+    if (step === 1) {
+      setSelectedDelivery(data.selectedDelivery);
+      setSelectedTime(data.selectedTime);
     }
-    if (step === 2 && !selectedTime) {
-      setError("Please select a delivery time.");
-      return;
-    }
-    setError("");
     setStep((prev) => prev + 1);
   };
 
@@ -93,40 +84,16 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
     switch (step) {
       case 1:
         return (
-          <DeliveryStep
-            deliveryOptions={deliveryOptions}
-            selectedDelivery={selectedDelivery}
-            availableTimes={availableTimes}
-            selectedTime={selectedTime}
-            setSelectedDelivery={setSelectedDelivery}
-            setAvailableTimes={setAvailableTimes}
-            setSelectedTime={setSelectedTime}
-            onNext={handleNext}
-          />
+          <DeliveryStep deliveryOptions={deliveryOptions} onNext={handleNext} />
         );
       case 2:
-        return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Select Delivery Time</h2>
-            <Button
-              onClick={handleNext}
-              variant="contained"
-              color="primary"
-              disabled={!selectedTime}
-              className="mt-4"
-            >
-              Next
-            </Button>
-          </div>
-        );
-      case 3:
         return (
           <BankSelectionStep
             bankDetails={product?.vendor?.bank_details || []}
             onOrder={handleOrder}
           />
         );
-      case 4:
+      case 3:
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Upload Proof of Payment</h2>
@@ -137,7 +104,7 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
               onChange={(e) => setProofOfPayment(e.target.files[0])}
             />
             <Button
-              onClick={() => setStep(5)}
+              onClick={() => setStep(4)}
               variant="contained"
               color="primary"
               disabled={!proofOfPayment}
@@ -147,7 +114,7 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
             </Button>
           </div>
         );
-      case 5:
+      case 4:
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Purchase Complete</h2>
@@ -178,7 +145,7 @@ const ProductDetailModal = ({ product = {}, onClose }) => {
             Back
           </Button>
         )}
-        {step < 5 && (
+        {step < 4 && (
           <Button onClick={onClose} color="secondary">
             Close
           </Button>

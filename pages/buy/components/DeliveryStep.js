@@ -1,15 +1,11 @@
 import { Select, MenuItem, Button, InputLabel } from "@mui/material";
+import { useState } from "react";
 
-const DeliveryStep = ({
-  deliveryOptions = { options: [] },
-  selectedDelivery,
-  availableTimes,
-  selectedTime,
-  setSelectedDelivery,
-  setAvailableTimes,
-  setSelectedTime,
-  onNext,
-}) => {
+const DeliveryStep = ({ deliveryOptions = { options: [] }, onNext }) => {
+  const [selectedDelivery, setSelectedDelivery] = useState("");
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
+
   const handleDeliveryChange = (deliveryId) => {
     const selected = deliveryOptions?.options?.find(
       (opt) => opt.id === deliveryId
@@ -17,6 +13,14 @@ const DeliveryStep = ({
     setSelectedDelivery(deliveryId);
     setAvailableTimes(selected?.available_times || []);
     setSelectedTime(selected?.available_times?.[0] || "");
+  };
+
+  const handleNextClick = () => {
+    if (!selectedDelivery || (availableTimes.length > 0 && !selectedTime)) {
+      alert("Please complete all selections.");
+      return;
+    }
+    onNext({ selectedDelivery, selectedTime });
   };
 
   return (
@@ -43,21 +47,20 @@ const DeliveryStep = ({
             onChange={(e) => setSelectedTime(e.target.value)}
             fullWidth
           >
-            {availableTimes.map((time, index) => (
-              <MenuItem key={index} value={time}>
-                {time}
-              </MenuItem>
-            ))}
+            {Object.entries(availableTimes).flatMap(([day, times]) =>
+              times.map((time, index) => (
+                <MenuItem key={`${day}-${index}`} value={time}>
+                  {day} - {time}
+                </MenuItem>
+              ))
+            )}
           </Select>
         </>
       )}
       <Button
-        onClick={onNext}
+        onClick={handleNextClick}
         variant="contained"
         color="primary"
-        disabled={
-          !selectedDelivery || (availableTimes.length > 0 && !selectedTime)
-        }
         className="mt-4"
       >
         Next
