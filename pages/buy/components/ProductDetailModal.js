@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,13 +7,13 @@ import {
   CircularProgress,
   Select,
   MenuItem,
+  InputLabel,
+  TextField,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TextField,
-  InputLabel,
 } from "@mui/material";
 import {
   saveOrder,
@@ -55,6 +55,21 @@ const ProductDetailModal = ({
       fetchData();
     }
   }, [product.vendor_id]);
+
+  const getAvailableTimes = () => {
+    const selectedOption = deliveryOptions.options.find(
+      (opt) => opt.id === selectedDelivery
+    );
+    if (!selectedOption || !selectedOption.available_times) return [];
+
+    return Object.entries(selectedOption.available_times).flatMap(
+      ([day, times]) =>
+        times.map((time) => ({
+          day,
+          time,
+        }))
+    );
+  };
 
   const handleOrder = async () => {
     setLoading(true);
@@ -123,7 +138,6 @@ const ProductDetailModal = ({
             onChange={(e) => setSelectedDelivery(e.target.value)}
             fullWidth
           >
-            {console.log("Delivery Options:", deliveryOptions)}
             {deliveryOptions?.options?.length > 0 ? (
               deliveryOptions.options.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
@@ -143,16 +157,12 @@ const ProductDetailModal = ({
                 onChange={(e) => setSelectedTime(e.target.value)}
                 fullWidth
               >
-                {deliveryOptions.options.find(
-                  (opt) => opt.id === selectedDelivery
-                )?.available_times?.length > 0 ? (
-                  deliveryOptions.options
-                    .find((opt) => opt.id === selectedDelivery)
-                    .available_times.map((time, index) => (
-                      <MenuItem key={index} value={time}>
-                        {time}
-                      </MenuItem>
-                    ))
+                {getAvailableTimes().length > 0 ? (
+                  getAvailableTimes().map(({ day, time }, index) => (
+                    <MenuItem key={index} value={`${day} ${time}`}>
+                      {day} - {time}
+                    </MenuItem>
+                  ))
                 ) : (
                   <MenuItem disabled>No available times</MenuItem>
                 )}
@@ -163,7 +173,8 @@ const ProductDetailModal = ({
         <div>
           <h2 className="text-lg font-bold mb-4">Bank Details</h2>
           <p>
-            Please transfer the payment to one of the following bank accounts:
+            Please transfer the payment to one of the following bank accounts,
+            and proceed to upload proof of payment:
           </p>
           <Table>
             <TableHead>
@@ -174,11 +185,12 @@ const ProductDetailModal = ({
               </TableRow>
             </TableHead>
             <TableBody>
+              {console.log("bankDetails", bankDetails)}
               {bankDetails?.map((bank, index) => (
                 <TableRow key={index}>
-                  <TableCell>{bank.name}</TableCell>
-                  <TableCell>{bank.account_name}</TableCell>
-                  <TableCell>{bank.account_number}</TableCell>
+                  <TableCell>{bank.bankName}</TableCell>
+                  <TableCell>{bank.accountName}</TableCell>
+                  <TableCell>{bank.accountNumber}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
