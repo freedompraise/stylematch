@@ -34,10 +34,10 @@ export const saveOrder = async (orderData) => {
 
   if (error) {
     console.error("Error saving order:", error.message);
-    return { success: false, orderId: null };
+    return { success: false };
   }
 
-  return { success: true, orderId: data[0].id };
+  return { success: true };
 };
 
 export const fetchDeliveryOptions = async (vendorId) => {

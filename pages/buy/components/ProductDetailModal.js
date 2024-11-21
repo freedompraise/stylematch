@@ -31,12 +31,10 @@ const ProductDetailModal = ({
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [proofOfPayment, setProofOfPayment] = useState(null);
-  const [proofOfPaymentUrl, setProofOfPaymentUrl] = useState(null);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [orderId, setOrderId] = useState(null);
   const [successMessage, setSuccessMessage] = useState(false);
 
   useEffect(() => {
@@ -102,16 +100,18 @@ const ProductDetailModal = ({
 
       if (proofOfPayment) {
         const uploadedImageUrl = await uploadImageToCloudinary(proofOfPayment);
-        if (!uploadedImageUrl)
-          throw new Error("Failed to upload proof of payment.");
+        if (!uploadedImageUrl) {
+          throw new Error("Proof of payment upload returned an invalid URL.");
+        }
         orderData.payment_proof_url = uploadedImageUrl;
       }
 
-      const { success, orderId } = await saveOrder(orderData);
-      if (!success) throw new Error("Failed to save order.");
+      const { success } = await saveOrder(orderData);
+      if (!success) {
+        throw new Error("Failed to save order.");
+      }
 
       CustomToast.success("Order submitted successfully!");
-      setOrderId(orderId);
       setSuccessMessage(true);
     } catch (err) {
       console.error("Failed to submit order:", err.message);
