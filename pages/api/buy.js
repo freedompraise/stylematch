@@ -40,19 +40,6 @@ export const saveOrder = async (orderData) => {
   return { success: true, orderId: data[0].id };
 };
 
-export const uploadProofOfPayment = async (orderId, formData) => {
-  const imageUrl = await uploadImageToCloudinary(formData);
-  const { data, error } = await supabase
-    .from("orders")
-    .update({ payment_proof_url: imageUrl })
-    .eq("id", orderId);
-
-  if (error) {
-    console.error("Error uploading proof of payment:", error.message);
-    return { success: false, error };
-  }
-};
-
 export const fetchDeliveryOptions = async (vendorId) => {
   const { data, error } = await supabase
     .from("deliveryoptions")
