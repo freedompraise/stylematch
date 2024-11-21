@@ -22,6 +22,7 @@ import CustomToast from "@/CustomToast";
 import LoadingButton from "@/LoadingButton";
 import { saveOrder, fetchDeliveryOptions } from "@/api/buy";
 import { uploadImageToCloudinary } from "@/cloudinary";
+
 const ProductDetailModal = ({
   product = { id: null, vendor_id: null, name: "", description: "", price: 0 },
   bankDetails = [],

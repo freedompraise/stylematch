@@ -1,4 +1,3 @@
-import { uploadImageToCloudinary } from "@/cloudinary";
 import { supabase } from "@/supabaseClient";
 
 export const getVendorDetails = async (company_name) => {
