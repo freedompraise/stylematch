@@ -27,6 +27,7 @@ const ProductDetailModal = ({
   product = { id: null, vendor_id: null, name: "", description: "", price: 0 },
   bankDetails = [],
   onClose,
+  onOrderSuccess,
 }) => {
   const [deliveryOptions, setDeliveryOptions] = useState({ options: [] });
   const [selectedDelivery, setSelectedDelivery] = useState(null);
@@ -110,6 +111,8 @@ const ProductDetailModal = ({
       const { success } = await saveOrder(orderData);
       if (!success) {
         throw new Error("Failed to save order.");
+      } else {
+        onOrderSuccess();
       }
 
       CustomToast.success("Order submitted successfully!");
@@ -149,6 +152,7 @@ const ProductDetailModal = ({
           <TextField
             label="Phone"
             value={customerPhone}
+            className="mt-4"
             onChange={(e) => setCustomerPhone(e.target.value)}
             fullWidth
           />

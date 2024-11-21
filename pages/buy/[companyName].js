@@ -5,6 +5,7 @@ import ProductCard from "./components/ProductCard";
 import ProductDetailModal from "./components/ProductDetailModal";
 import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
+import SuccessPopup from "./components/SuccessPopup";
 import { getVendorDetails, getVendorProducts } from "@/api/buy";
 
 const VendorPage = ({ searchQuery }) => {
@@ -17,6 +18,7 @@ const VendorPage = ({ searchQuery }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [delayedMessage, setDelayedMessage] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   useEffect(() => {
     const delayedMessageTimer = setTimeout(() => {
@@ -112,7 +114,14 @@ const VendorPage = ({ searchQuery }) => {
               product={selectedProduct}
               bankDetails={vendor.bank_details}
               onClose={() => setSelectedProduct(null)}
+              onOrderSuccess={() => {
+                setSelectedProduct(null);
+                setShowSuccessPopup(true);
+              }}
             />
+          )}
+          {showSuccessPopup && (
+            <SuccessPopup onClose={() => setShowSuccessPopup(false)} />
           )}
         </section>
       ) : (
