@@ -14,12 +14,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Snackbar,
 } from "@mui/material";
-import {
-  saveOrder,
-  fetchDeliveryOptions,
-  uploadProofOfPayment,
-} from "@/api/buy";
+import { FaLink } from "react-icons/fa";
+import ImageUploader from "@/FileUploader/ImageUploader";
+import CustomToast from "@/CustomToast";
+import LoadingButton from "@/LoadingButton";
+import { saveOrder, fetchDeliveryOptions } from "@/api/buy";
+import { uploadImageToCloudinary } from "@/cloudinary";
 
 const ProductDetailModal = ({
   product = { id: null, vendor_id: null, name: "", description: "", price: 0 },
@@ -30,9 +32,11 @@ const ProductDetailModal = ({
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [proofOfPayment, setProofOfPayment] = useState(null);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [orderId, setOrderId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +49,7 @@ const ProductDetailModal = ({
         const options = await fetchDeliveryOptions(product.vendor_id);
         setDeliveryOptions(options);
       } catch (err) {
-        setError("Failed to fetch delivery options.");
+        throw new Error("Failed to fetch delivery options.");
       } finally {
         setLoading(false);
       }
@@ -56,12 +60,16 @@ const ProductDetailModal = ({
     }
   }, [product.vendor_id]);
 
+  const copyAccountNumber = (accountNumber) => {
+    navigator.clipboard.writeText(accountNumber);
+    CustomToast.success("Account number copied to clipboard!");
+  };
+
   const getAvailableTimes = () => {
     const selectedOption = deliveryOptions.options.find(
       (opt) => opt.id === selectedDelivery
     );
     if (!selectedOption || !selectedOption.available_times) return [];
-
     return Object.entries(selectedOption.available_times).flatMap(
       ([day, times]) =>
         times.map((time) => ({
@@ -72,43 +80,44 @@ const ProductDetailModal = ({
   };
 
   const handleOrder = async () => {
+    if (!customerName || !customerPhone || !selectedDelivery || !selectedTime) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
     setLoading(true);
     setError("");
+
     try {
       const orderData = {
         product_id: product.id,
-        delivery_time: selectedTime,
-        delivery_location: selectedDelivery,
         vendor_id: product.vendor_id,
-        status: "pending_payment",
+        customer_name: customerName,
+        customer_phone: customerPhone,
+        delivery_location: selectedDelivery,
+        delivery_date: selectedTime,
+        status: "pending",
       };
-      const { success, orderId } = await saveOrder(orderData);
-      if (success) {
-        setOrderId(orderId);
-      } else {
+
+      if (proofOfPayment) {
+        const uploadedImageUrl = await uploadImageToCloudinary(proofOfPayment);
+        if (!uploadedImageUrl) {
+          throw new Error("Proof of payment upload returned an invalid URL.");
+        }
+        orderData.payment_proof_url = uploadedImageUrl;
+      }
+
+      const { success } = await saveOrder(orderData);
+      if (!success) {
         throw new Error("Failed to save order.");
       }
-    } catch (err) {
-      setError(err.message || "An unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleProofUpload = async () => {
-    if (!proofOfPayment) {
-      alert("Please upload a proof of payment.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("orderId", orderId);
-      formData.append("proof", proofOfPayment);
-      await uploadProofOfPayment(formData);
-      alert("Proof of payment uploaded successfully!");
+      CustomToast.success("Order submitted successfully!");
+      setSuccessMessage(true);
     } catch (err) {
-      alert("Failed to upload proof of payment.");
+      console.error("Failed to submit order:", err.message);
+      setError(err.message || "An error occurred while submitting the order.");
+      CustomToast.error(err.message || "Order submission failed.");
     } finally {
       setLoading(false);
     }
@@ -121,13 +130,28 @@ const ProductDetailModal = ({
         {loading && <CircularProgress />}
         {error && <p className="text-red-500">{error}</p>}
         <div>
-          <h2 className="text-lg font-bold mb-2">Product Details</h2>
           <p>
             <strong>Description:</strong> {product.description}
           </p>
           <p>
             <strong>Price:</strong> ${product.price}
           </p>
+        </div>
+        <div className="mt-4">
+          <h2 className="text-lg font-bold mb-4">Customer Details</h2>
+          <TextField
+            label="Name"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            fullWidth
+            className="mb-4"
+          />
+          <TextField
+            label="Phone"
+            value={customerPhone}
+            onChange={(e) => setCustomerPhone(e.target.value)}
+            fullWidth
+          />
         </div>
         <div className="mt-4">
           <h2 className="text-lg font-bold mb-4">Select Delivery</h2>
@@ -172,57 +196,52 @@ const ProductDetailModal = ({
         </div>
         <div>
           <h2 className="text-lg font-bold mb-4">Bank Details</h2>
-          <p>
-            Please transfer the payment to one of the following bank accounts,
-            and proceed to upload proof of payment:
-          </p>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Bank Name</TableCell>
                 <TableCell>Account Name</TableCell>
                 <TableCell>Account Number</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log("bankDetails", bankDetails)}
               {bankDetails?.map((bank, index) => (
                 <TableRow key={index}>
                   <TableCell>{bank.bankName}</TableCell>
                   <TableCell>{bank.accountName}</TableCell>
                   <TableCell>{bank.accountNumber}</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => copyAccountNumber(bank.accountNumber)}
+                      startIcon={<FaLink />}
+                    >
+                      Copy
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
-        <div>
+        <div className="mt-4">
           <h2 className="text-lg font-bold mb-4">Upload Proof of Payment</h2>
-          <TextField
-            type="file"
-            inputProps={{ accept: "image/*" }}
-            fullWidth
-            onChange={(e) => setProofOfPayment(e.target.files[0])}
+          <ImageUploader onImageSelect={setProofOfPayment} />
+        </div>
+        <div className="mt-4">
+          <LoadingButton
+            onClick={handleOrder}
+            label="Submit Order"
+            isLoading={loading}
           />
-          <Button
-            onClick={handleProofUpload}
-            variant="contained"
-            color="primary"
-            className="mt-4"
-            disabled={!proofOfPayment}
-          >
-            Upload Proof
-          </Button>
         </div>
       </DialogContent>
-      <Button
-        onClick={onClose}
-        color="secondary"
-        variant="outlined"
-        className="mt-4"
-      >
-        Close
-      </Button>
+      <Snackbar
+        open={successMessage}
+        autoHideDuration={3000}
+        onClose={() => setSuccessMessage(false)}
+        message="Order submitted successfully!"
+      />
     </Dialog>
   );
 };

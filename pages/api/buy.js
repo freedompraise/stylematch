@@ -1,4 +1,3 @@
-import { uploadImageToCloudinary } from "@/cloudinary";
 import { supabase } from "@/supabaseClient";
 
 export const getVendorDetails = async (company_name) => {
@@ -34,23 +33,10 @@ export const saveOrder = async (orderData) => {
 
   if (error) {
     console.error("Error saving order:", error.message);
-    return { success: false, orderId: null };
+    return { success: false };
   }
 
-  return { success: true, orderId: data[0].id };
-};
-
-export const uploadProofOfPayment = async (orderId, formData) => {
-  const imageUrl = await uploadImageToCloudinary(formData);
-  const { data, error } = await supabase
-    .from("orders")
-    .update({ payment_proof_url: imageUrl })
-    .eq("id", orderId);
-
-  if (error) {
-    console.error("Error uploading proof of payment:", error.message);
-    return { success: false, error };
-  }
+  return { success: true };
 };
 
 export const fetchDeliveryOptions = async (vendorId) => {
