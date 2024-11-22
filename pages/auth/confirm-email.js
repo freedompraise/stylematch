@@ -5,7 +5,7 @@ const ConfirmEmail = () => {
         <h1 className="text-2xl font-bold">Confirm your Email</h1>
         <p className="mt-4 text-gray-600">
           We’ve sent a confirmation email to your inbox. Please verify your
-          email to continue.
+          email to continue. Check your spam folder if you can't find the email.
         </p>
       </div>
     </div>
