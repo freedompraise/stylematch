@@ -1,66 +1,140 @@
-import { useEffect, useState } from "react";
-import { getOrders, confirmOrder, deliverOrder } from "@/api/vendor";
-import OrderList from "./components/OrderList";
-import CustomToast from "@/CustomToast";
+import { useState, useEffect } from "react";
+import { useAuth } from "context/useAuthContext";
+import { getVendorOrders, confirmOrder, deleteOrder } from "@/api/vendor";
+import { deleteImageFromCloudinary } from "@/cloudinary";
+import { getPublicId } from "@/utils";
+import {
+  Container,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import Breadcrumb from "@/Breadcrumb";
 
-const OrdersPage = ({ vendorId }) => {
+const OrdersPage = () => {
+  const { vendor } = useAuth();
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      const { orders, error } = await getOrders(vendorId);
-      if (error) {
-        CustomToast.error("Failed to fetch orders!");
-      } else {
-        setOrders(orders);
-      }
-    };
-    fetchOrders();
-  }, [vendorId]);
+    if (vendor) {
+      fetchOrders();
+    }
+  }, [vendor]);
 
-  const handleConfirmOrder = async (orderId, proofOfPaymentUrl) => {
+  const fetchOrders = async () => {
     setLoading(true);
-    const { success, error } = await confirmOrder(orderId, proofOfPaymentUrl);
-    setLoading(false);
-
-    if (success) {
-      CustomToast.success("Order confirmed successfully!");
-      setOrders((prev) =>
-        prev.map((order) =>
-          order.id === orderId
-            ? { ...order, status: "confirmed", proof_of_payment_url: null }
-            : order
-        )
+    try {
+      const { success, orders: fetchedOrders } = await getVendorOrders(
+        vendor.user_id
       );
-    } else {
-      CustomToast.error("Failed to confirm order!");
+      if (!success) throw new Error("Failed to fetch orders.");
+      setOrders(fetchedOrders);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const categorizedOrders = {
-    pending: orders.filter((order) => order.status === "pending"),
-    confirmed: orders.filter((order) => order.status === "confirmed"),
-    delivered: orders.filter((order) => order.status === "delivered"),
+  const handleConfirmOrder = async (order) => {
+    try {
+      if (order.payment_proof_url) {
+        await deleteImageFromCloudinary(getPublicId(order.payment_proof_url));
+      }
+      const { success } = await confirmOrder(order.id);
+      if (!success) throw new Error("Failed to confirm order.");
+      fetchOrders();
+    } catch (err) {
+      alert(err.message || "Failed to confirm order.");
+    }
+  };
+
+  const handleDeleteOrder = async (order) => {
+    try {
+      if (order.payment_proof_url) {
+        await deleteImageFromCloudinary(getPublicId(order.payment_proof_url));
+      }
+      const { success } = await deleteOrder(order.id);
+      if (!success) throw new Error("Failed to delete order.");
+      fetchOrders();
+    } catch (err) {
+      alert(err.message || "Failed to delete order.");
+    }
   };
 
   return (
-    <div className="p-4 lg:p-12 container bg-white shadow-md rounded-md">
-      <h1 className="text-2xl font-semibold mb-6">Orders</h1>
-      <OrderList
-        title="Pending Orders"
-        orders={categorizedOrders.pending}
-        onConfirm={handleConfirmOrder}
+    <Container className="py-8">
+      <Breadcrumb
+        links={[
+          { href: "/vendor", text: "Dashboard" },
+          { href: null, text: "Orders" },
+        ]}
       />
-      <OrderList
-        title="Confirmed Orders"
-        orders={categorizedOrders.confirmed}
-      />
-      <OrderList
-        title="Delivered Orders"
-        orders={categorizedOrders.delivered}
-      />
-    </div>
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <CircularProgress />
+        </div>
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Customer Name</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Delivery Location</TableCell>
+                <TableCell>Delivery Date</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell>{order.customer_name}</TableCell>
+                  <TableCell>{order.customer_phone}</TableCell>
+                  <TableCell>{order.delivery_location}</TableCell>
+                  <TableCell>
+                    {new Date(order.delivery_date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{order.status}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleConfirmOrder(order)}
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        onClick={() => handleDeleteOrder(order)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </Container>
   );
 };
 

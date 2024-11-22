@@ -58,7 +58,7 @@ const AuthPage = () => {
 
     if (vendor) {
       CustomToast.success("Logged in successfully");
-      router.push(`/vendor/dashboard`);
+      router.push(`/vendor`);
     }
   };
 
