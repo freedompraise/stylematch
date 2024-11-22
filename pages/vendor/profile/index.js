@@ -72,7 +72,7 @@ const VendorProfileSettings = () => {
 
       await updateVendorProfile(updatedVendorData);
       CustomToast.success("Profile updated successfully!");
-      router.push("/vendor/dashboard");
+      router.push("/vendor");
     } catch (error) {
       console.error("Failed to update profile:", error);
       CustomToast.error("Failed to update profile. Please try again.");
