@@ -73,12 +73,7 @@ const OrdersPage = () => {
 
   return (
     <Container className="py-8">
-      <Breadcrumb
-        links={[
-          { href: "/vendor", text: "Dashboard" },
-          { href: null, text: "Orders" },
-        ]}
-      />
+      <Breadcrumb links={[{ href: "/", label: "Home" }, { label: "Orders" }]} />
       {loading ? (
         <div className="flex justify-center items-center">
           <CircularProgress />
