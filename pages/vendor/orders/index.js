@@ -94,6 +94,15 @@ const OrdersPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {orders.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <Typography align="center" variant="subtitle1">
+                      No orders available Yet.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
               {orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>{order.customer_name}</TableCell>
