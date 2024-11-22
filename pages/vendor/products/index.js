@@ -5,6 +5,7 @@ import ProductCard from "./components/ProductCard";
 import { useRouter } from "next/router";
 import { Add } from "@mui/icons-material";
 import { useAuth } from "context/useAuthContext";
+import Breadcrumb from "@/Breadcrumb";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -50,7 +51,12 @@ const ProductList = () => {
   return (
     <div className="container p-4 main-content">
       <div className="flex justify-between mb-4">
-        <Typography variant="h4">Products</Typography>
+        <Breadcrumb
+          links={[
+            { href: "/vendor", label: "Dashboard" },
+            { label: "Products" },
+          ]}
+        />
         <Button
           variant="contained"
           color="primary"
@@ -76,9 +82,6 @@ const ProductList = () => {
         </Typography>
       ) : (
         <>
-          <Typography variant="h4" className="mb-4" align="center">
-            Product List
-          </Typography>
           <Grid container spacing={3}>
             {products.map((product) => (
               <Grid item xs={6} sm={4} md={3} key={product.id}>
