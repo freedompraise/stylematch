@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { categories, colors, sizes } from "@/api/product";
 import DiscountSection from "./DiscountSection";
 import ImageUploader from "@/FileUploader/ImageUploader";
@@ -11,29 +12,52 @@ const ProductForm = ({
   isDiscountChecked,
   setIsDiscountChecked,
 }) => {
+  const [errors, setErrors] = useState({});
+
   const validateField = (name, value) => {
+    let error = "";
     switch (name) {
+      case "name":
+        if (!value) error = "Product name is required.";
+        break;
+      case "category":
+        if (!value) error = "Category is required.";
+        break;
+      case "description":
+        if (!value) error = "Description is required.";
+        break;
       case "price":
-      case "discount_price":
-        return value && !isNaN(value) ? parseFloat(value) : null;
+        if (!value || isNaN(value)) error = "Valid price is required.";
+        break;
       case "stock_quantity":
-        return value && Number.isInteger(parseInt(value))
-          ? parseInt(value)
-          : null;
+        if (!value || isNaN(value) || parseInt(value) < 0) {
+          error = "Stock quantity must be a non-negative number.";
+        }
+        break;
+      case "discount_price":
+        if (isDiscountChecked && (!value || isNaN(value))) {
+          error = "Valid discount price is required.";
+        }
+        break;
       case "discount_start":
       case "discount_end":
-        return value || null;
+        if (isDiscountChecked && !value) {
+          error = "Discount dates are required.";
+        }
+        break;
       default:
-        return value;
+        break;
     }
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    return error ? null : value;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: validateField(name, value),
-    }));
+    const validValue = validateField(name, value);
+    if (validValue !== null) {
+      setProduct((prev) => ({ ...prev, [name]: validValue }));
+    }
   };
 
   return (
@@ -51,6 +75,7 @@ const ProductForm = ({
             placeholder="Enter product name"
             required
           />
+          {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
         </div>
 
         {/* Category Dropdown */}
@@ -70,13 +95,15 @@ const ProductForm = ({
               </option>
             ))}
           </select>
+          {errors.category && (
+            <p className="text-red-500 text-xs">{errors.category}</p>
+          )}
         </div>
 
         {/* Color */}
         <div>
           <label className="block text-sm font-semibold mb-1">Color</label>
           <select
-            type="text"
             name="color"
             value={product.color}
             onChange={handleChange}
@@ -95,7 +122,6 @@ const ProductForm = ({
         <div>
           <label className="block text-sm font-semibold mb-1">Size</label>
           <select
-            type="text"
             name="size"
             value={product.size}
             onChange={handleChange}
@@ -122,6 +148,9 @@ const ProductForm = ({
           placeholder="Enter product description"
           required
         ></textarea>
+        {errors.description && (
+          <p className="text-red-500 text-xs">{errors.description}</p>
+        )}
       </div>
 
       {/* Price and Stock Quantity */}
@@ -139,6 +168,9 @@ const ProductForm = ({
             placeholder="Enter price"
             required
           />
+          {errors.price && (
+            <p className="text-red-500 text-xs">{errors.price}</p>
+          )}
         </div>
 
         <div>
@@ -154,6 +186,9 @@ const ProductForm = ({
             placeholder="Enter stock quantity"
             required
           />
+          {errors.stock_quantity && (
+            <p className="text-red-500 text-xs">{errors.stock_quantity}</p>
+          )}
         </div>
       </div>
 
@@ -163,6 +198,7 @@ const ProductForm = ({
         setIsDiscountChecked={setIsDiscountChecked}
         product={product}
         handleChange={handleChange}
+        errors={errors}
       />
 
       {/* Image Upload */}

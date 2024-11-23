@@ -37,22 +37,46 @@ const AddProduct = () => {
   }, [vendor]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    let isValid = true;
+    if (e) e.preventDefault();
 
-    if (!product.price || isNaN(product.price)) {
-      isValid = false;
-      CustomToast.error("Price must be a number");
+    const requiredFields = [
+      "name",
+      "category",
+      "description",
+      "price",
+      "stock_quantity",
+    ];
+    let isValid = true;
+    const newErrors = {};
+
+    requiredFields.forEach((field) => {
+      if (!product[field]) {
+        newErrors[field] = `${field.replace("_", " ")} is required.`;
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      CustomToast.error("Please fill all required fields.");
+      return;
     }
 
-    if (isValid) {
-      if (selectedImage) {
+    if (selectedImage) {
+      try {
         const imageUrl = await uploadImageToCloudinary(selectedImage);
         product.image_url = imageUrl;
+      } catch (error) {
+        CustomToast.error("Failed to upload image. Please try again.");
+        return;
       }
+    }
+
+    try {
       await createProduct(product);
       CustomToast.success("Product added successfully!");
       router.push("/vendor/products");
+    } catch (error) {
+      CustomToast.error("Failed to add product. Please try again.");
     }
   };
 
