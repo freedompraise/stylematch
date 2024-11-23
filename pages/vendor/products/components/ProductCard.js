@@ -1,4 +1,3 @@
-// ProductCard.js
 import {
   Card,
   CardMedia,
@@ -26,9 +25,9 @@ const ProductCard = ({ product = {} }) => {
       <CardMedia
         component="img"
         alt={product.name || "Product"}
-        height="150"
         image={product.image_url || "/placeholder.jpg"}
         title={product.name || "Product"}
+        style={{ height: 150, objectFit: "cover" }}
       />
       <CardContent>
         <Typography variant="h6" className="font-bold mb-2">

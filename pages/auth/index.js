@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signUpVendor } from "../../utils/supabaseAuth";
 import { useAuth } from "context/useAuthContext";
 import { useRouter } from "next/router";
@@ -7,7 +7,7 @@ import LoadingButton from "@/LoadingButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +15,15 @@ const AuthPage = () => {
   const [companyName, setCompanyName] = useState("");
   const { saveSession } = useAuth();
   const router = useRouter();
+  const { mode } = router.query;
+
+  useEffect(() => {
+    if (mode === "signup") {
+      setIsLogin(false);
+    } else {
+      setIsLogin(true);
+    }
+  }, [mode]);
 
   const togglePane = () => setIsLogin(!isLogin);
 
