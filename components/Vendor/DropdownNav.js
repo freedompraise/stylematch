@@ -31,9 +31,19 @@ const DropdownNav = ({ closeDropdown }) => {
     }
   };
 
+  const handleClickInside = (e) => {
+    if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
+      closeDropdown();
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickInside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickInside);
+    };
   }, []);
 
   const copyVendorLink = () => {

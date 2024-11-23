@@ -8,7 +8,7 @@
                 "layouts/*",
                 "utils/*",
                 "styles/*",
-                "assets/*"
+                "public/*"
             ]
         }
     },
