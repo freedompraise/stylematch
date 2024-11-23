@@ -6,36 +6,23 @@ import { useRouter } from "next/router";
 import { Add } from "@mui/icons-material";
 import { useAuth } from "context/useAuthContext";
 import Breadcrumb from "@/Breadcrumb";
+import PreLoader from "@/Preloader";
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const router = useRouter();
   const { vendor } = useAuth();
 
   useEffect(() => {
-    if (!vendor) {
-      setError("Vendor data is not available. Please log in again.");
-      setLoading(false);
-      return;
-    }
-
     async function loadProducts() {
       try {
         setLoading(true);
         const data = await fetchProducts(vendor.user_id);
-
-        if (!data || data.length === 0) {
-          setError("No products found. Please add new products.");
-          setProducts([]);
-        } else {
-          setProducts(data);
-          setError(null);
-        }
+        setProducts(data || []);
       } catch (err) {
         console.error("Error fetching products:", err);
-        setError("Failed to load products. Please try again later.");
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -47,6 +34,10 @@ const ProductList = () => {
   const handleAddProduct = () => {
     router.push("/vendor/products/add");
   };
+
+  if (loading) {
+    return <PreLoader />;
+  }
 
   return (
     <div className="container p-4 main-content">
@@ -68,28 +59,28 @@ const ProductList = () => {
         </Button>
       </div>
 
-      {loading ? (
-        <Typography variant="h6" color="textSecondary">
-          Loading products...
-        </Typography>
-      ) : error ? (
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      ) : products.length === 0 ? (
-        <Typography variant="h6" color="textSecondary">
-          No products found. Please add new products.
-        </Typography>
+      {products && products.length > 0 ? (
+        <Grid container spacing={3}>
+          {products.map((product) => (
+            <Grid item xs={6} sm={4} md={3} key={product.id}>
+              <ProductCard product={product} />
+            </Grid>
+          ))}
+        </Grid>
       ) : (
-        <>
-          <Grid container spacing={3}>
-            {products.map((product) => (
-              <Grid item xs={6} sm={4} md={3} key={product.id}>
-                <ProductCard product={product} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
+        <div className="text-center mt-6">
+          <Typography variant="h6" color="textSecondary" gutterBottom>
+            No products found.
+          </Typography>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={handleAddProduct}
+          >
+            Add Your First Product
+          </Button>
+        </div>
       )}
     </div>
   );
