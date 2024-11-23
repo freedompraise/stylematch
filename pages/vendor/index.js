@@ -121,7 +121,7 @@ const VendorPage = () => {
                     Check out our resources to help you get started.
                   </p>
                   <Link
-                    href="/comingsoon"
+                    href="/vendor/help"
                     className="inline-block bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
                   >
                     Get Help
