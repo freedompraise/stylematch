@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { fetchProducts } from "../../api/product";
 import ProductCard from "./components/ProductCard";
@@ -14,22 +14,24 @@ const ProductList = () => {
   const router = useRouter();
   const { vendor } = useAuth();
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        setLoading(true);
-        const data = await fetchProducts(vendor.user_id);
-        setProducts(data || []);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const loadProducts = useCallback(async () => {
+    if (!vendor?.user_id) return;
 
+    try {
+      setLoading(true);
+      const data = await fetchProducts(vendor.user_id);
+      setProducts(data || []);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [vendor?.user_id]);
+
+  useEffect(() => {
     loadProducts();
-  }, [vendor]);
+  }, [loadProducts]);
 
   const handleAddProduct = () => {
     router.push("/vendor/products/add");
