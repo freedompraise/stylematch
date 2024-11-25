@@ -18,18 +18,12 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const excludePaths = [
-    "/auth",
-    "",
-    "/",
-    "/auth/verification-complete",
-    "/auth/confirm-email",
-  ];
+  const excludePaths = [/^\/auth(\/.*)?$/, /^\/$/, /^\/buy\/[^\/]+$/];
 
   useEffect(() => {
     const initialize = async () => {
       setIsLoading(true);
-      if (!excludePaths.includes(router.pathname)) {
+      if (!excludePaths.some((regex) => regex.test(router.pathname))) {
         if (hasCookie("vendor_session")) {
           const sessionData = JSON.parse(getCookie("vendor_session"));
 
