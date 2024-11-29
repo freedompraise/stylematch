@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,10 +8,17 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 const ResourceDialog = ({ resource, open, onClose }) => {
+  if (!resource) {
+    console.warn("Resource is undefined in ResourceDialog");
+    return null; // Do not render if resource is invalid
+  }
+
+  const { title = "Untitled", content = "No content available" } = resource;
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {resource.title}
+        {title}
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -28,7 +34,7 @@ const ResourceDialog = ({ resource, open, onClose }) => {
       </DialogTitle>
       <DialogContent>
         <Typography variant="body1" component="div">
-          {resource.content}
+          {content}
         </Typography>
       </DialogContent>
     </Dialog>
