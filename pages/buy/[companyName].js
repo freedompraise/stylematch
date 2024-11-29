@@ -7,6 +7,7 @@ import ErrorDisplay from "./components/ErrorDisplay";
 import ChatPopup from "./components/ChatPopup";
 import SuccessPopup from "./components/SuccessPopup";
 import { getVendorDetails, getVendorProducts } from "@/api/buy";
+import Head from "next/head";
 
 const VendorPage = ({ searchQuery }) => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const VendorPage = ({ searchQuery }) => {
           const { vendor: vendorData, error: vendorError } =
             await getVendorDetails(companyName);
           setVendor(vendorData);
+
           if (vendorError || !vendorData) {
             throw new Error("Failed to fetch vendor details");
           }
@@ -88,6 +90,21 @@ const VendorPage = ({ searchQuery }) => {
 
   return (
     <>
+      <Head>
+        <title>
+          {vendor
+            ? `Store Home of ${vendor.name} | StyleMatch`
+            : "Vendor not found | StyleMatch"}
+        </title>
+        <meta
+          name="description"
+          content={
+            vendor
+              ? `Discover amazing products from ${vendor.name}'s catalogue!`
+              : "Shop from your favorite vendors on StyleMatch"
+          }
+        />
+      </Head>
       {vendor ? (
         <section className="container mx-auto lg:px-16 sm:px-4 my-8 min-h-screen">
           <HeroSection vendor={vendor} />
