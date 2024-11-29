@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "context/useAuthContext";
-import { fetchProducts } from "../api/product";
 import Link from "next/link";
 import {
   FaBoxOpen,
@@ -17,7 +16,7 @@ const VendorPage = () => {
 
   useEffect(() => {
     if (!authLoading && vendor) {
-      fetchData();
+      setIsLoading(false);
     }
   }, [vendor, authLoading]);
 
@@ -33,7 +32,6 @@ const VendorPage = () => {
     <div className="container flex w-full">
       <div className="flex-1 py-8">
         <div className="p-4 max-w-5xl mx-auto">
-          // Welcome and guide for new users
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
               Welcome, {vendor.name}!
