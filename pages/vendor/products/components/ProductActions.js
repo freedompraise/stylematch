@@ -1,15 +1,12 @@
 import { useRouter } from "next/router";
 import { Menu, MenuItem, IconButton, Typography, Switch } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import DiscountModal from "./DiscountModal";
 import {
   toggleHottestOffer,
-  updateProductDiscount,
   deleteProduct,
   deleteProductImage,
 } from "@/api/product";
 import { useState, useEffect } from "react";
-import { FaPiggyBank } from "react-icons/fa";
 import CustomToast from "@/CustomToast";
 
 const ProductActions = ({ product, anchorEl, handleClose }) => {
@@ -50,10 +47,6 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
     }
   };
 
-  const handleDiscountToggle = () => {
-    setDiscountModalOpen(true);
-  };
-
   const handleViewDetails = () => {
     router.push(`/vendor/products/${product.id}`);
     handleClose();
@@ -80,12 +73,6 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
           </IconButton>
           {isHottestOffer ? "Deactivate" : "Activate"} Hottest Offer
         </MenuItem>
-        <MenuItem onClick={handleDiscountToggle}>
-          <IconButton>
-            <FaPiggyBank />
-          </IconButton>
-          Manage Discount
-        </MenuItem>
         <MenuItem onClick={handleViewDetails}>
           <IconButton>
             <Edit />
@@ -99,12 +86,6 @@ const ProductActions = ({ product, anchorEl, handleClose }) => {
           Delete Product
         </MenuItem>
       </Menu>
-      <DiscountModal
-        open={discountModalOpen}
-        onClose={() => setDiscountModalOpen(false)}
-        productId={product.id}
-        onDiscountChange={updateProductDiscount}
-      />
     </>
   );
 };

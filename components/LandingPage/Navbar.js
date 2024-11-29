@@ -1,54 +1,148 @@
-import { useState } from "react";
-import Link from "next/link";
-import { FaBars } from "react-icons/fa";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+} from "@mui/material";
+import { Menu as MenuIcon, Close as CloseIcon } from "@mui/icons-material";
+import Image from "next/image";
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   return (
-    <header className="bg-white shadow-lg fixed top-0 left-0 w-full z-50">
-      <div className="container mx-auto flex items-center justify-between py-3 px-4 md:px-6">
-        <Link href="/">
-          <span className="text-xl md:text-2xl font-bold text-indigo-500 cursor-pointer">
-            StyleMatch
-          </span>
-        </Link>
+    <div>
+      {/* Navbar for Desktop and Mobile */}
+      <AppBar position="static" className="bg-white shadow-md">
+        <Toolbar className="flex justify-between items-center container mx-auto px-6">
+          {/* Logo */}
+          <div className="text-2xl font-bold text-blue-600">
+            <Image src="/logo.png" width={120} height={40} alt="StyleMatch" />
+          </div>
 
-        <button
-          className="text-indigo-500 md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <FaBars size={24} />
-        </button>
-
-        <nav
-          className={`${
-            menuOpen ? "block" : "hidden"
-          } md:flex md:space-x-6 space-y-4 md:space-y-0 absolute md:relative top-full left-0 md:top-auto md:left-auto bg-white md:bg-transparent w-full md:w-auto shadow-md md:shadow-none p-4 md:p-0`}
-        >
-          <Link href="/#features">
-            <span className="block md:inline-block text-gray-600 hover:text-indigo-500 cursor-pointer">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-6 items-center">
+            <a
+              href="#features"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
               Features
-            </span>
-          </Link>
-          <Link href="/#pricing">
-            <span className="block md:inline-block text-gray-600 hover:text-indigo-500 cursor-pointer">
+            </a>
+            <a
+              href="#pricing"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
               Pricing
-            </span>
-          </Link>
-          <Link href="/#testimonials">
-            <span className="block md:inline-block text-gray-600 hover:text-indigo-500 cursor-pointer">
+            </a>
+            <a
+              href="#testimonials"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
               Testimonials
-            </span>
-          </Link>
-          <Link href="/auth">
-            <button className="w-full md:w-auto px-4 py-2 rounded-md bg-indigo-500 text-white hover:bg-indigo-600">
-              Sign Up
-            </button>
-          </Link>
-        </nav>
-      </div>
-    </header>
+            </a>
+            <a
+              href="#contact"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              Contact Us
+            </a>
+            <Button
+              href="/signup"
+              variant="contained"
+              className="bg-blue-600 text-white hover:bg-blue-700 transition"
+            >
+              Get Started
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <IconButton
+            edge="end"
+            className="md:hidden text-gray-700"
+            onClick={toggleDrawer}
+          >
+            <MenuIcon fontSize="large" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={mobileOpen} onClose={toggleDrawer}>
+        <div className="w-64 h-full flex flex-col bg-white shadow-lg">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-xl font-semibold text-blue-600">StyleMatch</h2>
+            <IconButton onClick={toggleDrawer}>
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <List className="flex-grow">
+            <ListItem
+              button
+              onClick={toggleDrawer}
+              component="a"
+              href="#features"
+            >
+              <ListItemText
+                primary="Features"
+                className="text-gray-700 hover:text-blue-600"
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={toggleDrawer}
+              component="a"
+              href="#pricing"
+            >
+              <ListItemText
+                primary="Pricing"
+                className="text-gray-700 hover:text-blue-600"
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={toggleDrawer}
+              component="a"
+              href="#testimonials"
+            >
+              <ListItemText
+                primary="Testimonials"
+                className="text-gray-700 hover:text-blue-600"
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={toggleDrawer}
+              component="a"
+              href="#contact"
+            >
+              <ListItemText
+                primary="Contact Us"
+                className="text-gray-700 hover:text-blue-600"
+              />
+            </ListItem>
+          </List>
+          <div className="p-4">
+            <Button
+              href="/auth?mode=signup"
+              variant="contained"
+              className="w-full bg-blue-600 text-white hover:bg-blue-700 transition"
+              onClick={toggleDrawer}
+            >
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </Drawer>
+    </div>
   );
 };
 
