@@ -16,7 +16,7 @@ const HeroSection = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="h2" className="mb-4 font-bold text-black">
-          Transform Your Local Business into a Credible Online Store.
+          Transform Your Fashion Business into a Credible Online Store.
         </Typography>
         <Typography variant="h6" className="mb-6 text-black">
           Easily manage your catalog, automate payments, and organize
