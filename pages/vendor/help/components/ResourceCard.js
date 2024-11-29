@@ -14,16 +14,14 @@ const icons = {
 };
 
 const ResourceCard = ({ resource, onCardClick }) => {
+  const icon = icons[resource.icon] || faBook;
   return (
     <Card
       className="shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-blue-500 cursor-pointer"
       onClick={onCardClick}
     >
       <CardContent className="flex flex-col items-center text-center">
-        <FontAwesomeIcon
-          icon={icons[resource.icon]}
-          className="text-4xl text-blue-500 mb-4"
-        />
+        <FontAwesomeIcon icon={icon} className="text-4xl text-blue-500 mb-4" />
         <Typography variant="h6" className="font-semibold text-gray-700">
           {resource.title}
         </Typography>
