@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Footer = () => {
   return (
     <footer className="bg-black text-white py-10">
@@ -16,41 +18,44 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2">
             <li>
-              <a href="/" className="text-blue-300 hover:text-white transition">
+              <Link
+                href="/"
+                className="text-blue-300 hover:text-white transition"
+              >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/features"
                 className="text-blue-300 hover:text-white transition"
               >
                 Features
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/pricing"
                 className="text-blue-300 hover:text-white transition"
               >
                 Pricing
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/testimonials"
                 className="text-blue-300 hover:text-white transition"
               >
                 Testimonials
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/contact"
                 className="text-blue-300 hover:text-white transition"
               >
                 Contact Us
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -60,32 +65,32 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
           <p className="text-blue-300 text-sm">
             Email:{" "}
-            <a
+            <Link
               href="mailto:support@stylematch.com"
               className="hover:text-white"
             >
               marketmatch@gmail.com
-            </a>
+            </Link>
           </p>
           <p className="text-blue-300 text-sm mt-2">
             Phone:{" "}
-            <a href="tel:+2349074577147" className="hover:text-white">
+            <Link href="tel:+2349074577147" className="hover:text-white">
               +234 907 457 7147
-            </a>
+            </Link>
           </p>
           <div className="flex gap-4 mt-4">
-            <a
+            <Link
               href="https://x.com/freedom_praise"
               className="text-blue-300 hover:text-white transition"
             >
               Twitter
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://www.instagram.com/stylematchhub/"
               className="text-blue-300 hover:text-white transition"
             >
               Instagram
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -93,13 +98,13 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="text-center text-blue-400 text-sm mt-10 border-t border-blue-800 pt-4">
         © {new Date().getFullYear()} StyleMatch. All rights reserved. |
-        <a href="/terms" className="ml-2 hover:text-white">
+        <Link href="/terms" className="ml-2 hover:text-white">
           Terms of Service
-        </a>{" "}
+        </Link>{" "}
         |
-        <a href="/privacy" className="ml-2 hover:text-white">
+        <Link href="/privacy" className="ml-2 hover:text-white">
           Privacy Policy
-        </a>
+        </Link>
       </div>
     </footer>
   );
