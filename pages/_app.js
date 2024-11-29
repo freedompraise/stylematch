@@ -21,7 +21,13 @@ function App({ Component, pageProps }) {
     <>
       <AuthProvider>
         <Head>
-          <title>StyleMatch</title>
+          <title>
+            {isVendorPage
+              ? "Vendor Dashboard | StyleMatch"
+              : isBuyerPage
+              ? "Shop for the best fashion items | StyleMatch"
+              : "StyleMatch | Transform Your Fashion Business into a Credible Online Store."}
+          </title>
           <meta
             name="description"
             content="Grow your fashion business, one sale at a time"
