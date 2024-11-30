@@ -15,7 +15,7 @@ const LandingPage = () => {
         <KeyFeatures />
         <WhyChoose />
         <PricingPlans />
-        <CaseStudies />
+        {/* <CaseStudies /> */}
       </div>
       <CallToAction />
     </>
