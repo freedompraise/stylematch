@@ -47,6 +47,11 @@ const VendorProfileSettings = () => {
 
   const handleSubmit = async () => {
     try {
+      if (!vendorData.company_name || !vendorData.name.trim()) {
+        CustomToast.error("Company Name and Name are required.");
+        return;
+      }
+
       let updatedBannerImageUrl = vendorData.banner_image_url;
 
       if (selectedImage) {
