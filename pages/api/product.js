@@ -14,7 +14,17 @@ export const categories = [
   "Beauty",
   "Home Decor",
 ];
-export const sizes = ["XS", "S", "M", "L", "XL", "XXL", "N/A"];
+
+export const sizesByCategory = {
+  clothing: ["S", "M", "L", "XL", "XXL"],
+  footwear: ["6", "7", "8", "9", "10"],
+  accessories: ["One Size"],
+  bags: ["One Size"],
+  jewelry: ["One Size"],
+  beauty: ["One Size"],
+  "home decor": ["One Size"],
+};
+
 export const colors = [
   "Red",
   "Blue",
