@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const ImageUploader = ({ onImageSelect, existingImageUrl }) => {
   const [imagePreview, setImagePreview] = useState(existingImageUrl || null);
-  const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 
   useEffect(() => {
     // Set preview to existing image if provided

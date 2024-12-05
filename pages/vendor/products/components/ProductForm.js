@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { categories, colors, sizes } from "@/api/product";
+import { categories, colors, sizesByCategory } from "@/api/product";
 import DiscountSection from "./DiscountSection";
 import ImageUploader from "@/FileUploader/ImageUploader";
 import LoadingButton from "@/LoadingButton";
+import CustomToast from "@/CustomToast";
 
 const ProductForm = ({
   product = {},
@@ -12,9 +12,9 @@ const ProductForm = ({
   isDiscountChecked,
   setIsDiscountChecked,
 }) => {
-  const [errors, setErrors] = useState({});
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  const validateField = (name, value) => {
     let error = "";
     switch (name) {
       case "name":
@@ -48,16 +48,16 @@ const ProductForm = ({
       default:
         break;
     }
-    setErrors((prev) => ({ ...prev, [name]: error }));
-    return error ? null : value;
+
+    if (error) {
+      CustomToast.error(error);
+    } else {
+      setProduct((prev) => ({ ...prev, [name]: value })); //
+    }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const validValue = validateField(name, value);
-    if (validValue !== null) {
-      setProduct((prev) => ({ ...prev, [name]: validValue }));
-    }
+  const getSizesByCategory = (category) => {
+    return sizesByCategory[category?.toLowerCase()] || [];
   };
 
   return (
@@ -75,7 +75,6 @@ const ProductForm = ({
             placeholder="Enter product name"
             required
           />
-          {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
         </div>
 
         {/* Category Dropdown */}
@@ -83,7 +82,7 @@ const ProductForm = ({
           <label className="block text-sm font-semibold mb-1">Category</label>
           <select
             name="category"
-            value={product.category}
+            value={product.category || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
             required
@@ -95,9 +94,6 @@ const ProductForm = ({
               </option>
             ))}
           </select>
-          {errors.category && (
-            <p className="text-red-500 text-xs">{errors.category}</p>
-          )}
         </div>
 
         {/* Color */}
@@ -105,7 +101,7 @@ const ProductForm = ({
           <label className="block text-sm font-semibold mb-1">Color</label>
           <select
             name="color"
-            value={product.color}
+            value={product.color || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
           >
@@ -123,16 +119,18 @@ const ProductForm = ({
           <label className="block text-sm font-semibold mb-1">Size</label>
           <select
             name="size"
-            value={product.size}
+            value={product.size || ""}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
+            disabled={!product.category}
           >
             <option value="">Select Size</option>
-            {sizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
+            {product.category &&
+              getSizesByCategory(product.category).map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
           </select>
         </div>
       </div>
@@ -142,15 +140,12 @@ const ProductForm = ({
         <label className="block text-sm font-semibold mb-1">Description</label>
         <textarea
           name="description"
-          value={product.description}
+          value={product.description || ""}
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
           placeholder="Enter product description"
           required
         ></textarea>
-        {errors.description && (
-          <p className="text-red-500 text-xs">{errors.description}</p>
-        )}
       </div>
 
       {/* Price and Stock Quantity */}
@@ -168,9 +163,6 @@ const ProductForm = ({
             placeholder="Enter price"
             required
           />
-          {errors.price && (
-            <p className="text-red-500 text-xs">{errors.price}</p>
-          )}
         </div>
 
         <div>
@@ -186,9 +178,6 @@ const ProductForm = ({
             placeholder="Enter stock quantity"
             required
           />
-          {errors.stock_quantity && (
-            <p className="text-red-500 text-xs">{errors.stock_quantity}</p>
-          )}
         </div>
       </div>
 
@@ -198,7 +187,6 @@ const ProductForm = ({
         setIsDiscountChecked={setIsDiscountChecked}
         product={product}
         handleChange={handleChange}
-        errors={errors}
       />
 
       {/* Image Upload */}
