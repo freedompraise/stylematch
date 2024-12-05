@@ -67,29 +67,51 @@ const DropdownNav = ({ closeDropdown }) => {
         </button>
       </div>
       <ul className="space-y-4 px-6">
-        <li className="hover:bg-blue-600 hover:text-white p-2">
-          <FontAwesomeIcon icon={faHome} className="mr-2" />
-          <Link href="/vendor">Dashboard</Link>
+        <li className="hover:bg-blue-600 hover:text-white">
+          <Link href="/vendor" className="flex items-center w-full p-2 block">
+            <FontAwesomeIcon icon={faHome} className="mr-2" />
+            Dashboard
+          </Link>
         </li>
-        <li className="hover:bg-blue-600 hover:text-white p-2">
-          <FontAwesomeIcon icon={faUser} className="mr-2" />
-          <Link href="/vendor/profile">Profile</Link>
+        <li className="hover:bg-blue-600 hover:text-white">
+          <Link
+            href="/vendor/profile"
+            className="flex items-center w-full p-2 block"
+          >
+            <FontAwesomeIcon icon={faUser} className="mr-2" />
+            Profile
+          </Link>
         </li>
-        <li className="hover:bg-blue-600 hover:text-white p-2">
-          <FontAwesomeIcon icon={faProductHunt} className="mr-2" />
-          <Link href="/vendor/products">Products</Link>
+        <li className="hover:bg-blue-600 hover:text-white">
+          <Link
+            href="/vendor/products"
+            className="flex items-center w-full p-2 block"
+          >
+            <FontAwesomeIcon icon={faProductHunt} className="mr-2" />
+            Products
+          </Link>
         </li>
-        <li className="hover:bg-blue-600 hover:text-white p-2">
-          <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-          <Link href="/vendor/orders">Orders</Link>
+        <li className="hover:bg-blue-600 hover:text-white">
+          <Link
+            href="/vendor/orders"
+            className="flex items-center w-full p-2 block"
+          >
+            <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+            Orders
+          </Link>
         </li>
-        <li className="hover:bg-blue-600 hover:text-white p-2">
-          <FontAwesomeIcon icon={faGear} className="mr-2" />
-          <Link href="/vendor/settings">Settings</Link>
+        <li className="hover:bg-blue-600 hover:text-white">
+          <Link
+            href="/vendor/settings"
+            className="flex items-center w-full p-2 block"
+          >
+            <FontAwesomeIcon icon={faGear} className="mr-2" />
+            Settings
+          </Link>
         </li>
         <li
           onClick={copyVendorLink}
-          className="hover:bg-blue-600 hover:text-white p-2 cursor-pointer"
+          className="hover:bg-blue-600 hover:text-white cursor-pointer flex items-center w-full p-2"
         >
           <FontAwesomeIcon icon={faLink} className="mr-2" />
           Copy Link

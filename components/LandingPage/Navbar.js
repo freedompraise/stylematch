@@ -56,7 +56,7 @@ const Navbar = () => {
               Contact Us
             </a>
             <Button
-              href="/signup"
+              href="/auth?mode=signup"
               variant="contained"
               className="bg-blue-600 text-white hover:bg-blue-700 transition"
             >

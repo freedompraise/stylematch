@@ -39,3 +39,4 @@ yarn-error.log*
 next-env.d.ts
 .history
 .next
+test-results/.last-run.json

@@ -19,7 +19,7 @@ const Footer = () => {
           <ul className="space-y-2">
             <li>
               <Link
-                href="/"
+                href="#"
                 className="text-blue-300 hover:text-white transition"
               >
                 Home
@@ -27,7 +27,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/features"
+                href="#features"
                 className="text-blue-300 hover:text-white transition"
               >
                 Features
@@ -35,7 +35,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/pricing"
+                href="#pricing"
                 className="text-blue-300 hover:text-white transition"
               >
                 Pricing
@@ -43,7 +43,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/testimonials"
+                href="#testimonials"
                 className="text-blue-300 hover:text-white transition"
               >
                 Testimonials
@@ -51,7 +51,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/contact"
+                href="#contact"
                 className="text-blue-300 hover:text-white transition"
               >
                 Contact Us

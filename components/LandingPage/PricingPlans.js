@@ -33,10 +33,10 @@ const PricingPlans = () => {
               className="bg-white shadow-lg rounded-lg p-6 max-w-sm w-full"
             >
               <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
-              <p className="text-2xl font-bold mb-4">{plan.price}</p>
+              {/* <p className="text-2xl font-bold mb-4">{plan.price}</p> */}
               <ul className="mb-6 text-gray-600">
                 {plan.features.map((feature, idx) => (
-                  <li key={idx}>✅ {feature}</li>
+                  <li key={idx}>☑ {feature}</li>
                 ))}
               </ul>
               <button
