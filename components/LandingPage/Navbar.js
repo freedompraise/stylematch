@@ -22,7 +22,14 @@ const Navbar = () => {
   return (
     <div>
       {/* Navbar for Desktop and Mobile */}
-      <AppBar position="static" className="bg-white shadow-md">
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "#ffffff", //
+          color: "#333333",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Toolbar className="flex justify-between items-center container mx-auto px-6">
           {/* Logo */}
           <div className="text-2xl font-bold text-blue-600">
