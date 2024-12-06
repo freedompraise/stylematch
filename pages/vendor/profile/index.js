@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { TextField, Button, Typography, Box } from "@mui/material";
+import { TextField, Typography, Box } from "@mui/material";
 import ImageUploader from "@/FileUploader/ImageUploader";
 import { updateVendorProfile, replaceBannerImage } from "@/api/vendor";
 import CustomToast from "@/CustomToast";
@@ -54,7 +54,10 @@ const VendorProfileSettings = () => {
 
       let updatedBannerImageUrl = vendorData.banner_image_url;
 
-      if (selectedImage) {
+      if (selectedImage === null && vendorData.banner_image_url) {
+        await replaceBannerImage(vendorData.banner_image_url, null);
+        updatedBannerImageUrl = "";
+      } else if (selectedImage) {
         updatedBannerImageUrl = await replaceBannerImage(
           vendorData.banner_image_url,
           selectedImage

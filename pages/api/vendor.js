@@ -41,6 +41,10 @@ export const replaceBannerImage = async (oldImageUrl, newImage) => {
     }
   }
 
+  if (!newImage) {
+    return "";
+  }
+
   const newImageUrl = await uploadImageToCloudinary(newImage);
   return newImageUrl;
 };
