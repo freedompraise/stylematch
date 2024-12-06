@@ -12,48 +12,44 @@ const ProductForm = ({
   isDiscountChecked,
   setIsDiscountChecked,
 }) => {
+  const validateForm = () => {
+    const errors = [];
+
+    if (!product.name) errors.push("Name is required");
+    if (!product.category) errors.push("Category is required");
+    if (!product.color) errors.push("Color is required");
+    if (!product.size) errors.push("Size is required");
+    if (!product.description) errors.push("Description is required");
+    if (!product.price) errors.push("Price is required");
+    if (!product.stock_quantity) errors.push("Stock Quantity is required");
+
+    if (isDiscountChecked) {
+      if (!product.discount_price) errors.push("Discount Price is required");
+      if (!product.discount_start_date)
+        errors.push("Discount Start Date is required");
+      if (!product.discount_end_date)
+        errors.push("Discount End Date is required");
+    }
+
+    if (errors.length) {
+      CustomToast.error(errors.join(", "));
+      return false;
+    }
+
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+  };
 
-    let error = "";
-    switch (name) {
-      case "name":
-        if (!value) error = "Product name is required.";
-        break;
-      case "category":
-        if (!value) error = "Category is required.";
-        break;
-      case "description":
-        if (!value) error = "Description is required.";
-        break;
-      case "price":
-        if (!value || isNaN(value)) error = "Valid price is required.";
-        break;
-      case "stock_quantity":
-        if (!value || isNaN(value) || parseInt(value) < 0) {
-          error = "Stock quantity must be a non-negative number.";
-        }
-        break;
-      case "discount_price":
-        if (isDiscountChecked && (!value || isNaN(value))) {
-          error = "Valid discount price is required.";
-        }
-        break;
-      case "discount_start":
-      case "discount_end":
-        if (isDiscountChecked && !value) {
-          error = "Discount dates are required.";
-        }
-        break;
-      default:
-        break;
+  const handleFormSubmit = (e) => {
+    if (validateForm()) {
+      handleSubmit();
     }
 
-    if (error) {
-      CustomToast.error(error);
-    } else {
-      setProduct((prev) => ({ ...prev, [name]: value })); //
-    }
+    return false;
   };
 
   const getSizesByCategory = (category) => {
@@ -201,7 +197,7 @@ const ProductForm = ({
       </div>
 
       <div className="flex justify-end">
-        <LoadingButton onClick={handleSubmit} label="Save Product" />
+        <LoadingButton onClick={handleFormSubmit} label="Save Product" />
       </div>
     </form>
   );

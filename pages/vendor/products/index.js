@@ -57,7 +57,7 @@ const ProductList = () => {
           startIcon={<Add />}
           onClick={handleAddProduct}
         >
-          Add Product
+          Add
         </Button>
       </div>
 

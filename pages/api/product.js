@@ -17,7 +17,18 @@ export const categories = [
 
 export const sizesByCategory = {
   clothing: ["S", "M", "L", "XL", "XXL"],
-  footwear: ["6", "7", "8", "9", "10"],
+  footwear: [
+    "EU 36",
+    "EU 37",
+    "EU 38",
+    "EU 39",
+    "EU 40",
+    "EU 41",
+    "EU 42",
+    "EU 43",
+    "EU 44",
+    "EU 45",
+  ],
   accessories: ["One Size"],
   bags: ["One Size"],
   jewelry: ["One Size"],

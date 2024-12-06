@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "context/useAuthContext";
-import { getVendorOrders, confirmOrder, deleteOrder } from "@/api/vendor";
+import { getVendorOrders, confirmOrder, deleteOrder } from "@/api/orderMgmt";
 import { deleteImageFromCloudinary } from "@/cloudinary";
 import { getPublicId } from "@/utils";
 import {
