@@ -105,7 +105,7 @@ const VendorProfileSettings = () => {
         margin="normal"
         label="Phone Number"
         name="phone"
-        type="tel"
+        type="number"
         value={vendorData.phone}
         onChange={handleInputChange}
       />
