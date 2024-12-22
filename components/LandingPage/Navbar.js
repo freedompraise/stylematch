@@ -51,10 +51,10 @@ const Navbar = () => {
               Pricing
             </a>
             <a
-              href="#testimonials"
+              href="#whychooseus"
               className="text-gray-700 hover:text-blue-600 transition"
             >
-              Testimonials
+              Why Choose Us
             </a>
             <a
               href="#contact"
@@ -118,10 +118,10 @@ const Navbar = () => {
               button
               onClick={toggleDrawer}
               component="a"
-              href="#testimonials"
+              href="#whychooseus"
             >
               <ListItemText
-                primary="Testimonials"
+                primary="Why Choose Us"
                 className="text-gray-700 hover:text-blue-600"
               />
             </ListItem>

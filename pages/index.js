@@ -3,7 +3,7 @@ import HowItWorks from "../components/LandingPage/HowItWorks";
 import KeyFeatures from "../components/LandingPage/KeyFeatures";
 import WhyChoose from "../components/LandingPage/WhyChoose";
 import PricingPlans from "../components/LandingPage/PricingPlans";
-import CaseStudies from "../components/LandingPage/CaseStudies";
+// import Testimonials from "../components/LandingPage/Testimonials";
 import CallToAction from "../components/LandingPage/CallToAction";
 
 const LandingPage = () => {
@@ -14,8 +14,8 @@ const LandingPage = () => {
         <HowItWorks />
         <KeyFeatures />
         <WhyChoose />
+        {/* <Testimonials /> */}
         <PricingPlans />
-        {/* <CaseStudies /> */}
       </div>
       <CallToAction />
     </>

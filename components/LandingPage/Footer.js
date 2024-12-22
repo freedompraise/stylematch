@@ -43,10 +43,10 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="#testimonials"
+                href="#whychooseus"
                 className="text-blue-300 hover:text-white transition"
               >
-                Testimonials
+                Why Choose Us
               </Link>
             </li>
           </ul>
