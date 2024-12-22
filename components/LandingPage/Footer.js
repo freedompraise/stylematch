@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white py-10">
+    <footer className="bg-black text-white py-10" id="contact">
       <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand Section */}
         <div>
@@ -47,14 +47,6 @@ const Footer = () => {
                 className="text-blue-300 hover:text-white transition"
               >
                 Testimonials
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#contact"
-                className="text-blue-300 hover:text-white transition"
-              >
-                Contact Us
               </Link>
             </li>
           </ul>

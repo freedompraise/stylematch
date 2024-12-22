@@ -27,7 +27,11 @@ const features = [
 const KeyFeatures = () => {
   return (
     <Container maxWidth="lg" className="py-16">
-      <Typography variant="h4" className="text-center mb-8 font-bold">
+      <Typography
+        variant="h4"
+        className="text-center mb-8 font-bold"
+        id="features"
+      >
         Key Features
       </Typography>
       <Grid container spacing={4}>
