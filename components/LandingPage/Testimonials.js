@@ -1,17 +1,18 @@
 import { Image } from "next/image";
 
-export const Testimonials = () => {
+const Testimonials = () => {
   const testimonials = [
     {
-      name: "Vendor A",
-      feedback: "StyleMatch has transformed my business!",
+      name: "Kevwe",
+      feedback:
+        "I always needed a platform like this to sell my products online, and StyleMatch has been a great help!",
       image: "/vendor-a.jpg",
     },
-    {
-      name: "Vendor B",
-      feedback: "Easy to use and great support!",
-      image: "/vendor-b.jpg",
-    },
+    // {
+    //   name: "Vendor B",
+    //   feedback: "Easy to use and great support!",
+    //   image: "/vendor-b.jpg",
+    // },
   ];
 
   return (
@@ -39,3 +40,5 @@ export const Testimonials = () => {
     </section>
   );
 };
+
+export default Testimonials;

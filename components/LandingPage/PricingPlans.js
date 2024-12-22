@@ -1,3 +1,5 @@
+import Router from "next/router";
+
 const PricingPlans = () => {
   const plans = [
     {
@@ -18,8 +20,12 @@ const PricingPlans = () => {
     },
   ];
 
+  const handleButtonClick = () => {
+    Router.push("/auth?mode=signup");
+  };
+
   return (
-    <section className="py-16 bg-gray-100">
+    <section className="py-16 bg-gray-100" id="pricing">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold mb-6">Pricing Plans</h2>
         <p className="mb-10 text-gray-600">
@@ -45,6 +51,7 @@ const PricingPlans = () => {
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700"
                 }`}
+                onClick={handleButtonClick}
                 disabled={plan.buttonLabel === "Launching Soon"}
               >
                 {plan.buttonLabel}
