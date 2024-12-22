@@ -23,11 +23,12 @@ const Navbar = () => {
     <div>
       {/* Navbar for Desktop and Mobile */}
       <AppBar
-        position="static"
+        position="fixed"
         sx={{
-          backgroundColor: "#ffffff", //
+          backgroundColor: "#ffffff",
           color: "#333333",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          zIndex: 1201,
         }}
       >
         <Toolbar className="flex justify-between items-center container mx-auto px-6">
@@ -81,6 +82,8 @@ const Navbar = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
+
+      <Toolbar />
 
       {/* Mobile Drawer */}
       <Drawer anchor="right" open={mobileOpen} onClose={toggleDrawer}>
@@ -154,3 +157,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+6;
