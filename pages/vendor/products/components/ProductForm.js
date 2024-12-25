@@ -25,10 +25,9 @@ const ProductForm = ({
 
     if (isDiscountChecked) {
       if (!product.discount_price) errors.push("Discount Price is required");
-      if (!product.discount_start_date)
+      if (!product.discount_start)
         errors.push("Discount Start Date is required");
-      if (!product.discount_end_date)
-        errors.push("Discount End Date is required");
+      if (!product.discount_end) errors.push("Discount End Date is required");
     }
 
     if (errors.length) {
