@@ -28,7 +28,7 @@ const Navbar = () => {
           backgroundColor: "#ffffff",
           color: "#333333",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          zIndex: 1201,
+          zIndex: 1000,
         }}
       >
         <Toolbar className="flex justify-between items-center container mx-auto px-6">
