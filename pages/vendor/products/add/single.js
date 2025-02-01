@@ -29,6 +29,7 @@ const AddProduct = () => {
 
   useEffect(() => {
     if (vendor) {
+      console.log("vendor", vendor);
       setProduct((prevProduct) => ({
         ...prevProduct,
         vendor_id: vendor.user_id,
